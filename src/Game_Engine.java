@@ -55,6 +55,9 @@ public class Game_Engine {
     public void update_game() {
         if (game_over || game_win) return;
 
+        // Poll Gamepad
+        input_manager.poll_controller();
+
         // 1. Update background stars
         for (Star s : stars) {
             s.update();

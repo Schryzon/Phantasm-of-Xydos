@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 public class Game_App extends JFrame {
@@ -36,6 +38,7 @@ public class Game_App extends JFrame {
         main_container.add(create_char_select_panel(), "char_select");
         main_container.add(new Game_Canvas(), "gameplay");
         main_container.add(create_high_scores_panel(), "scores");
+        main_container.add(create_settings_panel(), "settings");
 
         add(main_container);
         card_layout.show(main_container, "menu");
@@ -46,7 +49,6 @@ public class Game_App extends JFrame {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                // Paint beautiful dark starry background
                 g.setColor(new Color(10, 10, 25));
                 g.fillRect(0, 0, getWidth(), getHeight());
                 g.setColor(Color.WHITE);
@@ -61,7 +63,7 @@ public class Game_App extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(15, 15, 15, 15);
+        gbc.insets = new Insets(10, 15, 10, 15);
 
         JLabel title_label = new JLabel("PHANTASM OF XYDOS", JLabel.CENTER);
         title_label.setFont(new Font("Consolas", Font.BOLD, 46));
@@ -72,21 +74,27 @@ public class Game_App extends JFrame {
         subtitle_label.setForeground(new Color(138, 43, 226));
 
         JButton play_button = create_styled_button("START OPERATION");
+        JButton settings_button = create_styled_button("SYSTEM SETTINGS");
         JButton scores_button = create_styled_button("HIGH ARCHIVES");
         JButton exit_button = create_styled_button("SYSTEM SHUTDOWN");
 
         play_button.addActionListener(e -> card_layout.show(main_container, "char_select"));
+        settings_button.addActionListener(e -> card_layout.show(main_container, "settings"));
         scores_button.addActionListener(e -> {
             main_container.add(create_high_scores_panel(), "scores");
             card_layout.show(main_container, "scores");
         });
-        exit_button.addActionListener(e -> System.exit(0));
+        exit_button.addActionListener(e -> {
+            input_manager.shutdown_controller();
+            System.exit(0);
+        });
 
         panel.add(title_label, gbc);
         panel.add(subtitle_label, gbc);
-        gbc.insets = new Insets(30, 15, 10, 15);
+        gbc.insets = new Insets(20, 15, 8, 15);
         panel.add(play_button, gbc);
-        gbc.insets = new Insets(10, 15, 10, 15);
+        gbc.insets = new Insets(8, 15, 8, 15);
+        panel.add(settings_button, gbc);
         panel.add(scores_button, gbc);
         panel.add(exit_button, gbc);
 
@@ -114,16 +122,14 @@ public class Game_App extends JFrame {
         chars_box.setOpaque(false);
         chars_box.setBorder(BorderFactory.createEmptyBorder(20, 50, 40, 50));
 
-        // Historia Select Card
         JPanel hist_card = create_char_card("HISTORIA KOURA", "Vessel of Thunder (Lagta)",
                 new String[]{
                         "Primary: Straight Lightning bolts",
                         "Close-up: Automatic Spear slash",
-                        "Spell: Lagtanis Karvista (invulnerability & homing spears)",
+                        "Spell: Lagtanis Karvista (homing spears & invulnerability)",
                         "Hitbox: 4.0px"
                 }, new Color(180, 40, 40));
         
-        // Mira Select Card
         JPanel mira_card = create_char_card("MIRA KOURA", "Empathy Wind Weaver (Daiki)",
                 new String[]{
                         "Primary: Homing/Spread/Straight wind blades",
@@ -249,6 +255,167 @@ public class Game_App extends JFrame {
         return panel;
     }
 
+    private JPanel create_settings_panel() {
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor(new Color(15, 15, 25));
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        panel.setLayout(new BorderLayout());
+
+        JLabel header = new JLabel("SYSTEM SETTINGS", JLabel.CENTER);
+        header.setFont(new Font("Consolas", Font.BOLD, 32));
+        header.setForeground(new Color(0, 206, 209));
+        header.setBorder(BorderFactory.createEmptyBorder(30, 20, 10, 20));
+        panel.add(header, BorderLayout.NORTH);
+
+        JPanel settings_grid = new JPanel(new GridLayout(6, 2, 20, 15));
+        settings_grid.setOpaque(false);
+        settings_grid.setBorder(BorderFactory.createEmptyBorder(20, 80, 20, 80));
+
+        // SFX Volume Control
+        JLabel sfx_lbl = new JLabel("SFX VOLUME: " + Config_Manager.sfx_volume);
+        sfx_lbl.setFont(new Font("Consolas", Font.BOLD, 16));
+        sfx_lbl.setForeground(Color.WHITE);
+        JSlider sfx_slider = new JSlider(0, 100, Config_Manager.sfx_volume);
+        sfx_slider.setOpaque(false);
+        sfx_slider.addChangeListener(e -> {
+            Config_Manager.sfx_volume = sfx_slider.getValue();
+            sfx_lbl.setText("SFX VOLUME: " + Config_Manager.sfx_volume);
+        });
+
+        // Music Volume Control
+        JLabel music_lbl = new JLabel("MUSIC VOLUME: " + Config_Manager.music_volume);
+        music_lbl.setFont(new Font("Consolas", Font.BOLD, 16));
+        music_lbl.setForeground(Color.WHITE);
+        JSlider music_slider = new JSlider(0, 100, Config_Manager.music_volume);
+        music_slider.setOpaque(false);
+        music_slider.addChangeListener(e -> {
+            Config_Manager.music_volume = music_slider.getValue();
+            music_lbl.setText("MUSIC VOLUME: " + Config_Manager.music_volume);
+            Sound_Player.update_music_volume();
+        });
+
+        // FPS Limit Control
+        JLabel fps_lbl = new JLabel("FPS CAP TARGET:");
+        fps_lbl.setFont(new Font("Consolas", Font.BOLD, 16));
+        fps_lbl.setForeground(Color.WHITE);
+        String[] fps_options = {"30", "60", "120", "Unlimited"};
+        JComboBox<String> fps_box = new JComboBox<>(fps_options);
+        if (Config_Manager.fps_limit == 30) fps_box.setSelectedIndex(0);
+        else if (Config_Manager.fps_limit == 60) fps_box.setSelectedIndex(1);
+        else if (Config_Manager.fps_limit == 120) fps_box.setSelectedIndex(2);
+        else fps_box.setSelectedIndex(3);
+        fps_box.addActionListener(e -> {
+            String selected = (String) fps_box.getSelectedItem();
+            if (selected.equals("Unlimited")) {
+                Config_Manager.fps_limit = 1000;
+            } else {
+                Config_Manager.fps_limit = Integer.parseInt(selected);
+            }
+        });
+
+        // Keybind controls (simple rebind selectors)
+        JLabel rebind_lbl = new JLabel("KEYBOARD REBINDS:");
+        rebind_lbl.setFont(new Font("Consolas", Font.BOLD, 16));
+        rebind_lbl.setForeground(Color.WHITE);
+
+        JButton rebind_btn = new JButton("CONFIGURE KEYS");
+        rebind_btn.setFont(new Font("Consolas", Font.BOLD, 14));
+        rebind_btn.setForeground(Color.WHITE);
+        rebind_btn.setBackground(new Color(40, 40, 80));
+        rebind_btn.addActionListener(e -> open_rebind_dialog());
+
+        // Controller status info
+        JLabel ctrl_lbl = new JLabel("GAMEPAD SUPPORT:");
+        ctrl_lbl.setFont(new Font("Consolas", Font.BOLD, 16));
+        ctrl_lbl.setForeground(Color.WHITE);
+        JLabel ctrl_status = new JLabel("Jamepad active. Connect USB gamepad.");
+        ctrl_status.setFont(new Font("Consolas", Font.ITALIC, 14));
+        ctrl_status.setForeground(new Color(0, 255, 127));
+
+        settings_grid.add(sfx_lbl);
+        settings_grid.add(sfx_slider);
+        settings_grid.add(music_lbl);
+        settings_grid.add(music_slider);
+        settings_grid.add(fps_lbl);
+        settings_grid.add(fps_box);
+        settings_grid.add(rebind_lbl);
+        settings_grid.add(rebind_btn);
+        settings_grid.add(ctrl_lbl);
+        settings_grid.add(ctrl_status);
+
+        panel.add(settings_grid, BorderLayout.CENTER);
+
+        JButton save_btn = create_styled_button("SAVE AND RETURN");
+        save_btn.addActionListener(e -> {
+            Config_Manager.save_config("config.ini");
+            card_layout.show(main_container, "menu");
+        });
+        JPanel footer_panel = new JPanel();
+        footer_panel.setOpaque(false);
+        footer_panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 40, 10));
+        footer_panel.add(save_btn);
+        panel.add(footer_panel, BorderLayout.SOUTH);
+
+        return panel;
+    }
+
+    private void open_rebind_dialog() {
+        JDialog dialog = new JDialog(this, "KEYBOARD CONFIGURATION", true);
+        dialog.setSize(400, 400);
+        dialog.setLocationRelativeTo(this);
+        dialog.setLayout(new GridLayout(8, 2, 10, 10));
+        dialog.getContentPane().setBackground(new Color(20, 20, 35));
+
+        add_rebind_row(dialog, "MOVE UP", () -> Config_Manager.key_up, val -> Config_Manager.key_up = val);
+        add_rebind_row(dialog, "MOVE DOWN", () -> Config_Manager.key_down, val -> Config_Manager.key_down = val);
+        add_rebind_row(dialog, "MOVE LEFT", () -> Config_Manager.key_left, val -> Config_Manager.key_left = val);
+        add_rebind_row(dialog, "MOVE RIGHT", () -> Config_Manager.key_right, val -> Config_Manager.key_right = val);
+        add_rebind_row(dialog, "WEAPON SHOOT", () -> Config_Manager.key_shoot, val -> Config_Manager.key_shoot = val);
+        add_rebind_row(dialog, "CAST SPELL", () -> Config_Manager.key_spell, val -> Config_Manager.key_spell = val);
+        add_rebind_row(dialog, "FOCUS MODE", () -> Config_Manager.key_focus, val -> Config_Manager.key_focus = val);
+
+        JButton done_btn = new JButton("DONE");
+        done_btn.setFont(new Font("Consolas", Font.BOLD, 14));
+        done_btn.addActionListener(e -> dialog.dispose());
+        dialog.add(new JLabel(""));
+        dialog.add(done_btn);
+        dialog.setVisible(true);
+    }
+
+    private interface Key_Getter { int get(); }
+    private interface Key_Setter { void set(int val); }
+
+    private void add_rebind_row(JDialog dialog, String action_name, Key_Getter getter, Key_Setter setter) {
+        JLabel action_lbl = new JLabel("  " + action_name, JLabel.LEFT);
+        action_lbl.setFont(new Font("Consolas", Font.BOLD, 14));
+        action_lbl.setForeground(Color.WHITE);
+
+        JButton key_btn = new JButton(KeyEvent.getKeyText(getter.get()));
+        key_btn.setFont(new Font("Consolas", Font.BOLD, 12));
+        key_btn.setBackground(new Color(35, 35, 60));
+        key_btn.setForeground(Color.CYAN);
+
+        key_btn.addActionListener(e -> {
+            key_btn.setText("PRESS ANY KEY...");
+            key_btn.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent ke) {
+                    setter.set(ke.getKeyCode());
+                    key_btn.setText(KeyEvent.getKeyText(ke.getKeyCode()));
+                    key_btn.removeKeyListener(this);
+                }
+            });
+        });
+
+        dialog.add(action_lbl);
+        dialog.add(key_btn);
+    }
+
     private JButton create_styled_button(String text) {
         JButton btn = new JButton(text);
         btn.setFont(new Font("Consolas", Font.BOLD, 16));
@@ -276,10 +443,8 @@ public class Game_App extends JFrame {
         input_manager.clear();
         engine = new Game_Engine(selected_character, input_manager);
 
-        // Switch panel to gameplay
         card_layout.show(main_container, "gameplay");
         
-        // Grab focus
         Component current_comp = main_container.getComponent(2);
         current_comp.requestFocusInWindow();
 
@@ -287,7 +452,14 @@ public class Game_App extends JFrame {
             game_timer.stop();
         }
 
-        game_timer = new Timer(16, new ActionListener() {
+        // Calculate custom frame delay
+        int timer_delay = 16; // default 60 FPS
+        if (Config_Manager.fps_limit > 0) {
+            timer_delay = 1000 / Config_Manager.fps_limit;
+            if (timer_delay < 1) timer_delay = 1;
+        }
+
+        game_timer = new Timer(timer_delay, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (engine.game_over) {
