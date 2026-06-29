@@ -522,6 +522,16 @@ public class Game_App extends JFrame {
                 
                 g2d.drawString("STAGE: " + engine.stage_manager.current_stage, 440, 30);
 
+                // Draw Bravery Gauge
+                g2d.drawString("BRAVERY: " + (int) engine.player.bravery_gauge + "%", 570, 30);
+                g2d.setColor(Color.DARK_GRAY);
+                g2d.fillRect(690, 18, 80, 12);
+                Color bravery_color = new Color(255, (int)(255 - (engine.player.bravery_gauge * 1.55)), 0);
+                g2d.setColor(bravery_color);
+                g2d.fillRect(690, 18, (int)(80 * engine.player.bravery_gauge / 100.0), 12);
+                g2d.setColor(Color.WHITE);
+                g2d.drawRect(690, 18, 80, 12);
+
                 // Show Xydos (Lives)
                 g2d.drawString("XYDOS (L): ", 20, 780);
                 g2d.setColor(Color.GREEN);

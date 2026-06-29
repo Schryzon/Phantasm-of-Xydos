@@ -5,10 +5,17 @@ import java.util.List;
 public class Historia_Character extends Player_Character {
     private int shoot_cooldown = 0;
     private int slash_cooldown = 0;
-    private double slash_angle = 0;
-    private boolean is_slashing = false;
-    private double target_slash_x = 0;
-    private double target_slash_y = 0;
+    
+    // Slash visual status
+    private boolean is_slashing_right = false;
+    private double slash_angle_right = 0;
+    private double target_slash_rx = 0;
+    private double target_slash_ry = 0;
+
+    private boolean is_slashing_left = false;
+    private double slash_angle_left = 0;
+    private double target_slash_lx = 0;
+    private double target_slash_ly = 0;
 
     public Historia_Character(double x, double y) {
         super(x, y);
@@ -23,47 +30,69 @@ public class Historia_Character extends Player_Character {
             shoot_cooldown--;
         }
 
-        // Automatic close-range spear slash (uncontrollable by the player)
+        // Automatic close-range double spear slash (uncontrollable by the player)
         if (slash_cooldown > 0) {
             slash_cooldown--;
-        } else {
-            is_slashing = false;
-            // Check for close enemies
-            Enemy_Entity closest = null;
-            double min_dist = 85.0; // melee range (85px)
-            for (Enemy_Entity e : enemies) {
-                if (!e.is_active) continue;
-                double dist = Math.hypot(e.pos_x - pos_x, e.pos_y - pos_y);
-                if (dist < min_dist) {
-                    min_dist = dist;
-                    closest = e;
+            
+            // Trigger second (left) slash slightly after the first
+            if (slash_cooldown == 8) {
+                is_slashing_left = false;
+                Enemy_Entity closest = get_closest_enemy(enemies, 85.0);
+                if (closest != null) {
+                    closest.take_damage(20 + power_level * 4);
+                    target_slash_lx = closest.pos_x;
+                    target_slash_ly = closest.pos_y;
+                    is_slashing_left = true;
+                    slash_angle_left = Math.random() * Math.PI * 2;
+                    Sound_Player.play_sound("slash");
                 }
             }
+        } else {
+            is_slashing_right = false;
+            is_slashing_left = false;
+            
+            // Trigger first (right) slash
+            Enemy_Entity closest = get_closest_enemy(enemies, 85.0);
             if (closest != null) {
-                closest.take_damage(25 + power_level * 5);
-                target_slash_x = closest.pos_x;
-                target_slash_y = closest.pos_y;
-                is_slashing = true;
-                slash_cooldown = 15; // slash twice a second
-                slash_angle = Math.random() * Math.PI * 2;
+                closest.take_damage(20 + power_level * 4);
+                target_slash_rx = closest.pos_x;
+                target_slash_ry = closest.pos_y;
+                is_slashing_right = true;
+                slash_cooldown = 18; // total cycle delay
+                slash_angle_right = Math.random() * Math.PI * 2;
                 Sound_Player.play_sound("slash");
             }
         }
 
         if (shoot_cooldown == 0) {
+            int bonus = get_graze_damage_bonus();
             // CAS-8 straight fire lightning bolts
             if (focused) {
                 // High concentrated bolts
-                pool.acquire_bullet(pos_x - 8, pos_y - 10, 0, -12, 4, 0, 3 + power_level, Color.CYAN);
-                pool.acquire_bullet(pos_x + 8, pos_y - 10, 0, -12, 4, 0, 3 + power_level, Color.CYAN);
+                pool.acquire_bullet(pos_x - 8, pos_y - 10, 0, -12, 4, 0, 3 + power_level + bonus, Color.CYAN);
+                pool.acquire_bullet(pos_x + 8, pos_y - 10, 0, -12, 4, 0, 3 + power_level + bonus, Color.CYAN);
             } else {
                 // Slightly offset straight lines
-                pool.acquire_bullet(pos_x - 12, pos_y - 5, 0, -10, 5, 0, 2 + power_level, Color.CYAN);
-                pool.acquire_bullet(pos_x, pos_y - 12, 0, -11, 6, 0, 3 + power_level, Color.CYAN);
-                pool.acquire_bullet(pos_x + 12, pos_y - 5, 0, -10, 5, 0, 2 + power_level, Color.CYAN);
+                pool.acquire_bullet(pos_x - 12, pos_y - 5, 0, -10, 5, 0, 2 + power_level + bonus, Color.CYAN);
+                pool.acquire_bullet(pos_x, pos_y - 12, 0, -11, 6, 0, 3 + power_level + bonus, Color.CYAN);
+                pool.acquire_bullet(pos_x + 12, pos_y - 5, 0, -10, 5, 0, 2 + power_level + bonus, Color.CYAN);
             }
             shoot_cooldown = 6;
         }
+    }
+
+    private Enemy_Entity get_closest_enemy(List<Enemy_Entity> enemies, double max_dist) {
+        Enemy_Entity closest = null;
+        double min_dist = max_dist;
+        for (Enemy_Entity e : enemies) {
+            if (!e.is_active) continue;
+            double dist = Math.hypot(e.pos_x - pos_x, e.pos_y - pos_y);
+            if (dist < min_dist) {
+                min_dist = dist;
+                closest = e;
+            }
+        }
+        return closest;
     }
 
     @Override
@@ -102,11 +131,18 @@ public class Historia_Character extends Player_Character {
         g2d.setColor(Color.YELLOW);
         g2d.drawLine((int)pos_x, (int)pos_y, (int)pos_x, (int)(pos_y - 35));
 
-        // Draw active slash effect
-        if (is_slashing && slash_cooldown > 5) {
-            g2d.setColor(new Color(255, 215, 0, 180));
-            g2d.drawArc((int)(pos_x - 60), (int)(pos_y - 60), 120, 120, (int)(Math.toDegrees(slash_angle) - 45), 90);
-            g2d.drawLine((int)pos_x, (int)pos_y, (int)target_slash_x, (int)target_slash_y);
+        // Draw active right slash effect
+        if (is_slashing_right && slash_cooldown > 8) {
+            g2d.setColor(new Color(255, 140, 0, 180)); // Orange-red right slash
+            g2d.drawArc((int)(pos_x - 60), (int)(pos_y - 60), 120, 120, (int)(Math.toDegrees(slash_angle_right) - 45), 90);
+            g2d.drawLine((int)pos_x, (int)pos_y, (int)target_slash_rx, (int)target_slash_ry);
+        }
+
+        // Draw active left slash effect
+        if (is_slashing_left && slash_cooldown > 0 && slash_cooldown < 14) {
+            g2d.setColor(new Color(255, 215, 0, 180)); // Gold left slash
+            g2d.drawArc((int)(pos_x - 60), (int)(pos_y - 60), 120, 120, (int)(Math.toDegrees(slash_angle_left) + 135), 90);
+            g2d.drawLine((int)pos_x, (int)pos_y, (int)target_slash_lx, (int)target_slash_ly);
         }
 
         // Draw hit box if focused or debug mode

@@ -213,6 +213,13 @@ public class Game_Engine {
                         player.hit();
                         b.is_active = false;
                         break;
+                    } else if (dist < 30.0) {
+                        // Graze detection!
+                        player.bravery_gauge += 1.5;
+                        if (player.bravery_gauge > 100.0) {
+                            player.bravery_gauge = 100.0;
+                        }
+                        Sound_Player.play_sound("graze");
                     }
                 }
             }

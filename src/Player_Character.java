@@ -15,6 +15,9 @@ public abstract class Player_Character {
     
     public boolean spell_active = false;
     public int spell_timer = 0;
+
+    // Bravery Gauge (from bullet grazing)
+    public double bravery_gauge = 0.0;
     
     public Player_Character(double x, double y) {
         this.pos_x = x;
@@ -37,6 +40,12 @@ public abstract class Player_Character {
                 spell_active = false;
             }
         }
+
+        // Decay bravery gauge naturally by 0.2 per tick
+        bravery_gauge -= 0.2;
+        if (bravery_gauge < 0.0) {
+            bravery_gauge = 0.0;
+        }
     }
 
     public void hit() {
@@ -46,6 +55,11 @@ public abstract class Player_Character {
         invulnerability_timer = 120; // 2 seconds at 60 FPS
         pos_x = 400; // Reset position
         pos_y = 650;
+        bravery_gauge = 0.0; // Reset bravery gauge upon taking damage
+    }
+
+    public int get_graze_damage_bonus() {
+        return (int) (bravery_gauge / 25.0); // max +4 damage at 100% bravery
     }
 
     public abstract void fire_weapon(Bullet_Pool pool, boolean focused, List<Enemy_Entity> enemies);
