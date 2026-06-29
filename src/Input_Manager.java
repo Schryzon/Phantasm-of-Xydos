@@ -76,8 +76,12 @@ public class Input_Manager extends KeyAdapter {
         handle_key(e.getKeyCode(), false);
     }
 
+    public boolean skip = false;
+
     private void handle_key(int key_code, boolean pressed) {
-        if (key_code == Config_Manager.key_up) {
+        if (key_code == KeyEvent.VK_SPACE) {
+            skip = pressed;
+        } else if (key_code == Config_Manager.key_up) {
             up = pressed;
         } else if (key_code == Config_Manager.key_down) {
             down = pressed;
@@ -102,5 +106,6 @@ public class Input_Manager extends KeyAdapter {
         shoot = false;
         spell = false;
         focus = false;
+        skip = false;
     }
 }

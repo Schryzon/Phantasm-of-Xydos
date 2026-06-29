@@ -536,6 +536,63 @@ public class Game_App extends JFrame {
                 // Show Power
                 g2d.setColor(Color.WHITE);
                 g2d.drawString("POWER: " + engine.player.power_level + "/4", 620, 780);
+
+                // Draw Dialogue Overlay if active
+                if (engine.stage_manager.is_in_dialogue && engine.stage_manager.current_dialogue != null) {
+                    Stage_Manager.Stage_Event dialogue = engine.stage_manager.current_dialogue;
+
+                    // Apply visual shakiness if configured (vibration offset)
+                    int shake_x = 0;
+                    int shake_y = 0;
+                    if (dialogue.shakiness > 0 && !engine.stage_manager.is_dialogue_finished) {
+                        shake_x = (int) ((Math.random() - 0.5) * dialogue.shakiness * 2);
+                        shake_y = (int) ((Math.random() - 0.5) * dialogue.shakiness * 2);
+                    }
+
+                    int box_x = 50 + shake_x;
+                    int box_y = 520 + shake_y;
+                    int box_w = 700;
+                    int box_h = 160;
+
+                    // Draw dialogue container box (Undertale-style)
+                    g2d.setColor(Color.BLACK);
+                    g2d.fillRect(box_x, box_y, box_w, box_h);
+                    g2d.setColor(Color.WHITE);
+                    g2d.setStroke(new java.awt.BasicStroke(3));
+                    g2d.drawRect(box_x, box_y, box_w, box_h);
+
+                    // Draw Speaker name
+                    g2d.setFont(new Font("Consolas", Font.BOLD, 20));
+                    g2d.setColor(new Color(0, 206, 209));
+                    g2d.drawString(dialogue.speaker, box_x + 30, box_y + 40);
+
+                    // Draw typed dialogue text
+                    g2d.setFont(new Font("Consolas", Font.PLAIN, 16));
+                    g2d.setColor(Color.WHITE);
+                    
+                    String typed_text = dialogue.text.substring(0, engine.stage_manager.dialogue_char_index);
+                    int text_y = box_y + 80;
+                    int line_w = 640;
+                    FontMetrics fm = g2d.getFontMetrics();
+                    String[] words = typed_text.split(" ");
+                    StringBuilder current_line = new StringBuilder();
+                    
+                    for (String word : words) {
+                        if (fm.stringWidth(current_line.toString() + word) < line_w) {
+                            current_line.append(word).append(" ");
+                        } else {
+                            g2d.drawString(current_line.toString(), box_x + 30, text_y);
+                            text_y += 24;
+                            current_line = new StringBuilder(word + " ");
+                        }
+                    }
+                    g2d.drawString(current_line.toString(), box_x + 30, text_y);
+
+                    // Draw skip/advance guide
+                    g2d.setFont(new Font("Consolas", Font.ITALIC, 11));
+                    g2d.setColor(Color.GRAY);
+                    g2d.drawString("[Z] ADVANCE  |  [SPACE] SKIP CUTSCENE", box_x + box_w - 240, box_y + box_h - 15);
+                }
             }
         }
     }

@@ -32,7 +32,7 @@ public class Enemy_Entity {
         this.score_value = score;
     }
 
-    public void update_enemy(Bullet_Pool pool, double player_x, double player_y) {
+    public void update_enemy(Bullet_Pool pool, double player_x, double player_y, List<Stage_Manager.Boss_Spell> spells) {
         if (!is_active) return;
         pos_x += vel_x;
         pos_y += vel_y;
@@ -49,7 +49,7 @@ public class Enemy_Entity {
             shoot_cooldown--;
         }
 
-        execute_patterns(pool, player_x, player_y);
+        execute_patterns(pool, player_x, player_y, spells);
     }
 
     public void take_damage(int amount) {
@@ -60,10 +60,9 @@ public class Enemy_Entity {
         }
     }
 
-    protected void execute_patterns(Bullet_Pool pool, double player_x, double player_y) {
-        // Overridden by specific patterns or sub-classes.
+    protected void execute_patterns(Bullet_Pool pool, double player_x, double player_y, List<Stage_Manager.Boss_Spell> spells) {
         if (is_boss) {
-            execute_boss_patterns(pool, player_x, player_y);
+            execute_boss_patterns(pool, player_x, player_y, spells);
             return;
         }
 
@@ -74,110 +73,122 @@ public class Enemy_Entity {
         }
     }
 
-    protected void execute_boss_patterns(Bullet_Pool pool, double player_x, double player_y) {
-        // Base boss behavior - simple radial patterns
-        if (boss_name.equals("Victoria Koura")) {
-            // Stage 1 Boss
-            if (health < max_health * 0.5) {
-                boss_phase = 2;
-            }
+    protected void execute_boss_patterns(Bullet_Pool pool, double player_x, double player_y, List<Stage_Manager.Boss_Spell> spells) {
+        // Threshold check for boss phase transitions
+        if (health < max_health * 0.4) {
+            boss_phase = 3;
+        } else if (health < max_health * 0.7) {
+            boss_phase = 2;
+        }
 
+        // Try to execute custom spell from stage file first
+        Stage_Manager.Boss_Spell active_spell = null;
+        for (Stage_Manager.Boss_Spell s : spells) {
+            if (s.phase == boss_phase) {
+                active_spell = s;
+                break;
+            }
+        }
+
+        if (active_spell != null) {
+            // Apply standard sweep movement
+            vel_x = Math.sin(pattern_timer * 0.03) * 2.5;
+            vel_y = (pos_y < 150) ? 1.0 : 0;
+
+            if (shoot_cooldown == 0) {
+                String pattern = active_spell.pattern_type;
+                Color col = active_spell.color;
+                double spd = active_spell.bullet_speed;
+
+                if (pattern.equals("spiral")) {
+                    int arms = 4;
+                    for (int a = 0; a < arms; a++) {
+                        double angle = (pattern_timer * 0.08) + (a * Math.PI / 2);
+                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * spd, Math.sin(angle) * spd, 7, 1, 1, col);
+                    }
+                } else if (pattern.equals("ring_spread")) {
+                    int num = 18;
+                    for (int i = 0; i < num; i++) {
+                        double angle = (2 * Math.PI / num) * i + (pattern_timer * 0.04);
+                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * spd, Math.sin(angle) * spd, 8, 1, 1, col);
+                    }
+                } else if (pattern.equals("concentric_circles")) {
+                    int num = 24;
+                    for (int i = 0; i < num; i++) {
+                        double angle = (2 * Math.PI / num) * i;
+                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * spd, Math.sin(angle) * spd, 7, 1, 1, col);
+                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * (spd * 1.5), Math.sin(angle) * (spd * 1.5), 7, 1, 1, col);
+                    }
+                } else if (pattern.equals("chaos_bloom")) {
+                    double angle = Math.random() * Math.PI * 2;
+                    pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * spd, Math.sin(angle) * spd, 8, 1, 1, col);
+                }
+                shoot_cooldown = active_spell.shoot_cooldown;
+            }
+            return;
+        }
+
+        // Fallback hardcoded defaults if no spells configured
+        if (boss_name.equals("Victoria Koura")) {
             if (boss_phase == 1) {
-                // Sweep movement
                 vel_x = Math.sin(pattern_timer * 0.02) * 2;
                 vel_y = (pos_y < 150) ? 1.0 : 0;
-
-                // Circular spread
                 if (shoot_cooldown == 0) {
                     int num_bullets = 16;
                     for (int i = 0; i < num_bullets; i++) {
                         double angle = (2 * Math.PI / num_bullets) * i + (pattern_timer * 0.05);
-                        double vx = Math.cos(angle) * 3;
-                        double vy = Math.sin(angle) * 3;
-                        pool.acquire_bullet(pos_x, pos_y, vx, vy, 8, 1, 1, Color.RED);
+                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * 3, Math.sin(angle) * 3, 8, 1, 1, Color.RED);
                     }
                     shoot_cooldown = 35;
                 }
             } else {
-                // Phase 2: Hellfire Berserk (sweeping red/orange waves)
                 vel_x = Math.sin(pattern_timer * 0.04) * 3;
                 vel_y = (pos_y > 150) ? -1.0 : (pos_y < 120 ? 1.0 : 0);
-
                 if (shoot_cooldown == 0) {
                     double angle_center = Math.atan2(player_y - pos_y, player_x - pos_x);
                     int num_bullets = 8;
                     for (int i = 0; i < num_bullets; i++) {
                         double angle = angle_center - 0.5 + (i * 1.0 / num_bullets);
-                        double vx = Math.cos(angle) * 4;
-                        double vy = Math.sin(angle) * 4;
-                        pool.acquire_bullet(pos_x, pos_y, vx, vy, 6, 1, 1, Color.ORANGE);
+                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * 4, Math.sin(angle) * 4, 6, 1, 1, Color.ORANGE);
                     }
-                    // Add photon blades (fast straight bullets)
-                    double vx = Math.cos(angle_center) * 8;
-                    double vy = Math.sin(angle_center) * 8;
-                    pool.acquire_bullet(pos_x, pos_y, vx, vy, 12, 1, 1, Color.WHITE);
+                    pool.acquire_bullet(pos_x, pos_y, Math.cos(angle_center) * 8, Math.sin(angle_center) * 8, 12, 1, 1, Color.WHITE);
                     shoot_cooldown = 20;
                 }
             }
         } else if (boss_name.equals("Queen Fenria & Xelisa")) {
-            // Stage 2 Boss
-            if (health < max_health * 0.5) {
-                boss_phase = 2;
-            }
-
             vel_x = Math.cos(pattern_timer * 0.03) * 2.5;
             vel_y = (pos_y < 150) ? 1.0 : 0;
-
             if (boss_phase == 1) {
-                // Spiral patterns
                 if (shoot_cooldown == 0) {
                     int arms = 4;
                     for (int a = 0; a < arms; a++) {
                         double angle = (pattern_timer * 0.08) + (a * Math.PI / 2);
-                        double vx = Math.cos(angle) * 3.5;
-                        double vy = Math.sin(angle) * 3.5;
-                        pool.acquire_bullet(pos_x, pos_y, vx, vy, 7, 1, 1, new Color(138, 43, 226)); // Purple
+                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * 3.5, Math.sin(angle) * 3.5, 7, 1, 1, new Color(138, 43, 226));
                     }
                     shoot_cooldown = 10;
                 }
             } else {
-                // Phase 2: Massive geometric rings
                 if (shoot_cooldown == 0) {
                     int num_bullets = 24;
                     for (int i = 0; i < num_bullets; i++) {
                         double angle = (2 * Math.PI / num_bullets) * i;
-                        double vx = Math.cos(angle) * 2.5;
-                        double vy = Math.sin(angle) * 2.5;
-                        pool.acquire_bullet(pos_x, pos_y, vx, vy, 8, 1, 1, Color.MAGENTA);
+                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * 2.5, Math.sin(angle) * 2.5, 8, 1, 1, Color.MAGENTA);
                     }
                     shoot_cooldown = 45;
                 }
             }
         } else if (boss_name.equals("Goddess Cyria")) {
-            // Stage 3 Boss (Restored Goddess Cyria)
-            if (health < max_health * 0.6) {
-                boss_phase = 2;
-            }
-            if (health < max_health * 0.3) {
-                boss_phase = 3;
-            }
-
             vel_x = Math.sin(pattern_timer * 0.05) * 3.5;
             vel_y = (pos_y < 160) ? 1.5 : 0;
-
             if (boss_phase == 1) {
-                // Cross-crossing arcs
                 if (shoot_cooldown == 0) {
                     for (int d = -2; d <= 2; d++) {
                         double angle = Math.PI / 2 + d * 0.3 + Math.sin(pattern_timer * 0.1) * 0.2;
-                        double vx = Math.cos(angle) * 4.5;
-                        double vy = Math.sin(angle) * 4.5;
-                        pool.acquire_bullet(pos_x, pos_y, vx, vy, 6, 1, 1, Color.CYAN);
+                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * 4.5, Math.sin(angle) * 4.5, 6, 1, 1, Color.CYAN);
                     }
                     shoot_cooldown = 8;
                 }
-            } else if (boss_phase == 2) {
-                // Concentric circles moving at different speeds
+            } else {
                 if (shoot_cooldown == 0) {
                     int num_bullets = 30;
                     for (int i = 0; i < num_bullets; i++) {
@@ -187,26 +198,6 @@ public class Enemy_Entity {
                     }
                     shoot_cooldown = 50;
                 }
-            } else {
-                // Phase 3: Chaos bloom (multi-color)
-                if (shoot_cooldown == 0) {
-                    double angle = Math.random() * Math.PI * 2;
-                    double speed = 2 + Math.random() * 4;
-                    Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.MAGENTA, Color.CYAN};
-                    Color c = colors[(int)(Math.random() * colors.length)];
-                    pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * speed, Math.sin(angle) * speed, 8, 1, 1, c);
-                }
-                if (pattern_timer % 15 == 0) {
-                    // Circle wave
-                    int num = 12;
-                    for (int i = 0; i < num; i++) {
-                        double angle = (2 * Math.PI / num) * i + (pattern_timer * 0.02);
-                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * 3, Math.sin(angle) * 3, 9, 1, 1, Color.WHITE);
-                    }
-                }
-                if (shoot_cooldown == 0) {
-                    shoot_cooldown = 2;
-                }
             }
         }
     }
@@ -214,7 +205,6 @@ public class Enemy_Entity {
     public void draw_enemy(Graphics2D g2d) {
         if (!is_active) return;
 
-        // Visual representation of enemy/boss
         if (is_boss) {
             g2d.setColor(Color.RED);
             g2d.fillOval((int)(pos_x - radius), (int)(pos_y - radius), (int)(radius * 2), (int)(radius * 2));

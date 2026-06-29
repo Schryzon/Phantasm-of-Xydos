@@ -1,6 +1,9 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +16,10 @@ public class Game_Engine {
     public int score = 0;
     public boolean game_over = false;
     public boolean game_win = false;
+
+    // Background Image cache
+    private BufferedImage bg_image = null;
+    private String loaded_bg_path = "";
 
     // Procedural stars for parallax background
     private final List<Star> stars = new ArrayList<>();
@@ -54,6 +61,35 @@ public class Game_Engine {
 
     public void update_game() {
         if (game_over || game_win) return;
+
+        // Dialogue pause state (freeze action, allow inputs to advance dialogues)
+        if (stage_manager.is_in_dialogue) {
+            stage_manager.update_dialogue_typing();
+            if (input_manager.shoot) {
+                stage_manager.advance_dialogue();
+                input_manager.clear();
+            }
+            if (input_manager.skip) {
+                stage_manager.skip_dialogue();
+                input_manager.clear();
+            }
+            return;
+        }
+
+        // Dynamically load background image if it changed
+        if (!stage_manager.bg_path.equals(loaded_bg_path)) {
+            loaded_bg_path = stage_manager.bg_path;
+            if (!loaded_bg_path.isEmpty()) {
+                try {
+                    bg_image = ImageIO.read(new File(loaded_bg_path));
+                } catch (Exception e) {
+                    bg_image = null;
+                    System.err.println("[WARNING] failed loading stage background image: " + loaded_bg_path);
+                }
+            } else {
+                bg_image = null;
+            }
+        }
 
         // Poll Gamepad
         input_manager.poll_controller();
@@ -99,7 +135,7 @@ public class Game_Engine {
                 enemies.remove(i);
                 continue;
             }
-            e.update_enemy(bullet_pool, player.pos_x, player.pos_y);
+            e.update_enemy(bullet_pool, player.pos_x, player.pos_y, stage_manager.boss_spells);
         }
 
         // 5. Update active bullets & homing steering
@@ -201,13 +237,30 @@ public class Game_Engine {
     public void draw_game(Graphics2D g2d) {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Fill background
-        g2d.setColor(Color.BLACK);
+        // Fill background color
+        Color bg_color = Color.BLACK;
+        try {
+            bg_color = Color.decode(stage_manager.bg_color_hex);
+        } catch (Exception ignored) {}
+        g2d.setColor(bg_color);
         g2d.fillRect(0, 0, 800, 800);
 
+        // Tile background image if loaded
+        if (bg_image != null) {
+            int img_h = bg_image.getHeight();
+            int img_w = bg_image.getWidth();
+            int offset_y = (int) (stage_manager.scroll_y % img_h);
+            for (int y = -img_h; y < 800 + img_h; y += img_h) {
+                g2d.drawImage(bg_image, 0, y + offset_y, 800, img_h, null);
+            }
+        }
+
         // Draw parallax background stars
-        g2d.setColor(Color.DARK_GRAY);
-        for (Star s : stars) {
+        g2d.setColor(Color.LIGHT_GRAY);
+        // Limit active star count to config
+        int render_stars = Math.min(stars.size(), stage_manager.star_count);
+        for (int i = 0; i < render_stars; i++) {
+            Star s = stars.get(i);
             g2d.fillOval((int)s.x, (int)s.y, 2, 2);
         }
 

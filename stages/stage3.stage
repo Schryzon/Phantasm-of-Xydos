@@ -1,0 +1,33 @@
+[Metadata]
+name = Stage 3: Chained Horizons
+bgm = assets/stage3_bgm.wav
+bg_path = assets/stage3_bg.png
+bg_color = #001F1F
+star_count = 120
+
+[Spells]
+1,concentric_circles,#00FFFF,3.0,40
+2,chaos_bloom,#FFFFFF,4.5,15
+
+[Events]
+100,scroll_speed,1.0
+150,spawn_enemy,300,-50,25,0.0,2.0,300
+150,spawn_enemy,500,-50,25,0.0,2.0,300
+
+300,dialogue,Historia,"The atmosphere... gravity is collapsing. Where are we?",30,2
+350,dialogue,Mira,"The Realm of Chained Horizons. Time and space are bound here.",35,0
+
+500,scroll_speed,2.0
+600,spawn_enemy,200,-50,30,0.8,4.0,400
+600,spawn_enemy,600,-50,30,-0.8,4.0,400
+
+800,dialogue,Historia,"No backing down. Lagta's power is fully synchronized.",30,1
+
+1100,scroll_speed,1.2
+1200,spawn_enemy,400,-50,35,0.0,3.0,500
+
+1500,dialogue,Cyria,"Mortals. You have unraveled the dark. Now face the absolute light.",45,3
+1550,dialogue,Mira,"Goddess Cyria! Let's restore the cosmic balance together!",35,0
+1600,dialogue,Cyria,"Prove your harmony. Survive the beautiful erasure.",45,6
+
+2000,boss,Goddess Cyria,3000,400,-80,55,20000
