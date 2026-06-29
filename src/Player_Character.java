@@ -1,0 +1,54 @@
+import java.awt.Graphics2D;
+import java.util.List;
+
+public abstract class Player_Character {
+    public double pos_x;
+    public double pos_y;
+    public double speed_normal;
+    public double speed_focused;
+    public double hitbox_radius;
+    public int xydos_count; // lives
+    public int spell_count; // bombs
+    public int power_level; // ranges from 1 to 4
+    public boolean is_invulnerable = false;
+    public int invulnerability_timer = 0;
+    
+    public boolean spell_active = false;
+    public int spell_timer = 0;
+    
+    public Player_Character(double x, double y) {
+        this.pos_x = x;
+        this.pos_y = y;
+        this.xydos_count = 3;
+        this.spell_count = 3;
+        this.power_level = 1;
+    }
+
+    public void update_player() {
+        if (invulnerability_timer > 0) {
+            invulnerability_timer--;
+            if (invulnerability_timer <= 0) {
+                is_invulnerable = false;
+            }
+        }
+        if (spell_active) {
+            spell_timer--;
+            if (spell_timer <= 0) {
+                spell_active = false;
+            }
+        }
+    }
+
+    public void hit() {
+        if (is_invulnerable || spell_active) return;
+        xydos_count--;
+        is_invulnerable = true;
+        invulnerability_timer = 120; // 2 seconds at 60 FPS
+        pos_x = 400; // Reset position
+        pos_y = 650;
+    }
+
+    public abstract void fire_weapon(Bullet_Pool pool, boolean focused, List<Enemy_Entity> enemies);
+    public abstract void activate_spell(Bullet_Pool pool, List<Enemy_Entity> enemies);
+    public abstract void draw_character(Graphics2D g2d, boolean focused);
+}

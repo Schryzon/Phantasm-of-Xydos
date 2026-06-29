@@ -1,0 +1,6 @@
+bin/
+lib/*.jar
+local_scores.txt
+*.log
+.gemini/
+touhou_implementation_plan.md
