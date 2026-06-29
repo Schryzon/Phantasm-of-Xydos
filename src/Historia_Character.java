@@ -39,7 +39,7 @@ public class Historia_Character extends Player_Character {
                 is_slashing_left = false;
                 Enemy_Entity closest = get_closest_enemy(enemies, 85.0);
                 if (closest != null) {
-                    closest.take_damage(20 + power_level * 4);
+                    closest.take_damage((int)(20 + power_level * 4));
                     target_slash_lx = closest.pos_x;
                     target_slash_ly = closest.pos_y;
                     is_slashing_left = true;
@@ -54,7 +54,7 @@ public class Historia_Character extends Player_Character {
             // Trigger first (right) slash
             Enemy_Entity closest = get_closest_enemy(enemies, 85.0);
             if (closest != null) {
-                closest.take_damage(20 + power_level * 4);
+                closest.take_damage((int)(20 + power_level * 4));
                 target_slash_rx = closest.pos_x;
                 target_slash_ry = closest.pos_y;
                 is_slashing_right = true;
@@ -66,16 +66,17 @@ public class Historia_Character extends Player_Character {
 
         if (shoot_cooldown == 0) {
             int bonus = get_graze_damage_bonus();
+            int ipower = (int) power_level;
             // CAS-8 straight fire lightning bolts
             if (focused) {
                 // High concentrated bolts
-                pool.acquire_bullet(pos_x - 8, pos_y - 10, 0, -12, 4, 0, 3 + power_level + bonus, Color.CYAN);
-                pool.acquire_bullet(pos_x + 8, pos_y - 10, 0, -12, 4, 0, 3 + power_level + bonus, Color.CYAN);
+                pool.acquire_bullet(pos_x - 8, pos_y - 10, 0, -12, 4, 0, 3 + ipower + bonus, Color.CYAN);
+                pool.acquire_bullet(pos_x + 8, pos_y - 10, 0, -12, 4, 0, 3 + ipower + bonus, Color.CYAN);
             } else {
                 // Slightly offset straight lines
-                pool.acquire_bullet(pos_x - 12, pos_y - 5, 0, -10, 5, 0, 2 + power_level + bonus, Color.CYAN);
-                pool.acquire_bullet(pos_x, pos_y - 12, 0, -11, 6, 0, 3 + power_level + bonus, Color.CYAN);
-                pool.acquire_bullet(pos_x + 12, pos_y - 5, 0, -10, 5, 0, 2 + power_level + bonus, Color.CYAN);
+                pool.acquire_bullet(pos_x - 12, pos_y - 5, 0, -10, 5, 0, 2 + ipower + bonus, Color.CYAN);
+                pool.acquire_bullet(pos_x, pos_y - 12, 0, -11, 6, 0, 3 + ipower + bonus, Color.CYAN);
+                pool.acquire_bullet(pos_x + 12, pos_y - 5, 0, -10, 5, 0, 2 + ipower + bonus, Color.CYAN);
             }
             shoot_cooldown = 6;
         }

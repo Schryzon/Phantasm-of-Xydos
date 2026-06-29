@@ -9,7 +9,7 @@ public abstract class Player_Character {
     public double hitbox_radius;
     public int xydos_count; // lives
     public int spell_count; // bombs
-    public int power_level; // ranges from 1 to 4
+    public double power_level; // ranges from 1.0 to 4.0
     public boolean is_invulnerable = false;
     public int invulnerability_timer = 0;
     
@@ -24,7 +24,7 @@ public abstract class Player_Character {
         this.pos_y = y;
         this.xydos_count = 3;
         this.spell_count = 3;
-        this.power_level = 1;
+        this.power_level = 1.0;
     }
 
     public void update_player() {
@@ -53,8 +53,8 @@ public abstract class Player_Character {
         xydos_count--;
         is_invulnerable = true;
         invulnerability_timer = 120; // 2 seconds at 60 FPS
-        pos_x = 400; // Reset position
-        pos_y = 650;
+        pos_x = 640; // Reset position
+        pos_y = 600;
         bravery_gauge = 0.0; // Reset bravery gauge upon taking damage
     }
 

@@ -15,6 +15,7 @@ public class Config_Manager {
     public static int sfx_volume = 80;
     public static int music_volume = 80;
     public static int fps_limit = 60;
+    public static boolean fullscreen = false;
 
     // Keybinds (default keyboard keycodes)
     public static int key_up = 38;     // Up Arrow
@@ -69,6 +70,9 @@ public class Config_Manager {
                         case "fps_limit":
                             fps_limit = Integer.parseInt(value);
                             break;
+                        case "fullscreen":
+                            fullscreen = val_bool;
+                            break;
                         case "key_up":
                             key_up = Integer.parseInt(value);
                             break;
@@ -109,7 +113,8 @@ public class Config_Manager {
             writer.write("[settings]\n");
             writer.write("sfx_volume = " + sfx_volume + "\n");
             writer.write("music_volume = " + music_volume + "\n");
-            writer.write("fps_limit = " + fps_limit + "\n\n");
+            writer.write("fps_limit = " + fps_limit + "\n");
+            writer.write("fullscreen = " + fullscreen + "\n\n");
 
             writer.write("[keybinds]\n");
             writer.write("key_up = " + key_up + "\n");

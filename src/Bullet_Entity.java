@@ -42,8 +42,8 @@ public class Bullet_Entity {
         pos_x += vel_x;
         pos_y += vel_y;
 
-        // Deactivate if far outside screen boundaries (assuming 800x800 game resolution)
-        if (pos_x < -50 || pos_x > 850 || pos_y < -50 || pos_y > 850) {
+        // Deactivate if far outside play field boundaries
+        if (pos_x < 270 || pos_x > 1010 || pos_y < -50 || pos_y > 770) {
             is_active = false;
         }
     }
