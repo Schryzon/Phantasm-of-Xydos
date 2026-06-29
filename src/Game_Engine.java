@@ -16,6 +16,7 @@ public class Game_Engine {
     public int score = 0;
     public boolean game_over = false;
     public boolean game_win = false;
+    public boolean is_paused = false;
 
     // Background Image cache
     private BufferedImage bg_image = null;
@@ -60,6 +61,13 @@ public class Game_Engine {
     }
 
     public void update_game() {
+        input_manager.poll_controller();
+        input_manager.update_pause_state();
+        if (input_manager.pause_triggered) {
+            is_paused = !is_paused;
+        }
+
+        if (is_paused) return;
         if (game_over || game_win) return;
 
         // Dialogue pause state (freeze action, allow inputs to advance dialogues)
@@ -91,8 +99,7 @@ public class Game_Engine {
             }
         }
 
-        // Poll Gamepad
-        input_manager.poll_controller();
+
 
         // 1. Update background stars
         for (Star s : stars) {

@@ -132,7 +132,7 @@ public class Stage_Manager {
                         boss_spells.add(spell);
                     }
                 } else if (section.equals("events")) {
-                    String[] parts = line.split(",", -1);
+                    String[] parts = line.split(",(?=([^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)", -1);
                     if (parts.length >= 3) {
                         double offset = Double.parseDouble(parts[0].trim());
                         String type = parts[1].trim().toLowerCase();

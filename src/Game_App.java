@@ -635,6 +635,23 @@ public class Game_App extends JFrame {
                     g2d.setColor(Color.GRAY);
                     g2d.drawString("[Z] ADVANCE  |  [SPACE] SKIP CUTSCENE", box_x + box_w - 240, box_y + box_h - 15);
                 }
+
+                // Draw Pause Overlay if active
+                if (engine.is_paused) {
+                    g2d.setColor(new Color(0, 0, 0, 150));
+                    g2d.fillRect(0, 0, 800, 800);
+
+                    g2d.setColor(Color.WHITE);
+                    g2d.setFont(new Font("Consolas", Font.BOLD, 36));
+                    String pause_txt = "GAME PAUSED";
+                    FontMetrics fm = g2d.getFontMetrics();
+                    g2d.drawString(pause_txt, (800 - fm.stringWidth(pause_txt)) / 2, 400 - 20);
+
+                    g2d.setFont(new Font("Consolas", Font.PLAIN, 18));
+                    String resume_txt = "[ESC] / [START BUTTON] TO RESUME";
+                    fm = g2d.getFontMetrics();
+                    g2d.drawString(resume_txt, (800 - fm.stringWidth(resume_txt)) / 2, 400 + 20);
+                }
             }
         }
     }
