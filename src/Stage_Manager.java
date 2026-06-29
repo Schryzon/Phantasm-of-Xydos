@@ -35,6 +35,7 @@ public class Stage_Manager {
 
         // Dialogue parameters
         public String speaker;
+        public String expression;
         public String text;
         public int char_delay_ms;
         public int shakiness;
@@ -155,18 +156,18 @@ public class Stage_Manager {
                                 }
                                 break;
                             case "dialogue":
-                                if (parts.length >= 6) {
-                                    event.speaker = parts[2].trim();
-                                    // Dialogue text could contain quotes, so strip them if present
-                                    String raw_text = parts[3].trim();
-                                    if (raw_text.startsWith("\"") && raw_text.endsWith("\"")) {
-                                        raw_text = raw_text.substring(1, raw_text.length() - 1);
-                                    }
-                                    event.text = raw_text;
-                                    event.char_delay_ms = Integer.parseInt(parts[4].trim());
-                                    event.shakiness = Integer.parseInt(parts[5].trim());
-                                }
-                                break;
+                               if (parts.length >= 7) {
+                                   event.speaker = parts[2].trim();
+                                   event.expression = parts[3].trim();
+                                   String raw_text = parts[4].trim();
+                                   if (raw_text.startsWith("\"") && raw_text.endsWith("\"")) {
+                                       raw_text = raw_text.substring(1, raw_text.length() - 1);
+                                   }
+                                   event.text = raw_text;
+                                   event.char_delay_ms = Integer.parseInt(parts[5].trim());
+                                   event.shakiness = Integer.parseInt(parts[6].trim());
+                               }
+                               break;
                             case "boss":
                                 if (parts.length >= 8) {
                                     event.name = parts[2].trim();

@@ -15,21 +15,21 @@ star_count = 80
 150,spawn_enemy,400,-50,8,0.0,2.0,100
 150,spawn_enemy,600,-50,8,0.2,2.0,100
 
-300,dialogue,Mira,"Historia, stay sharp! We have entered CyroN airspace.",35,2
-350,dialogue,Historia,"I see them. CAS-8 armed. Proceeding to sweep.",30,0
+300,dialogue,Mira,determined,"Historia, stay sharp! We have entered CyroN airspace.",35,2
+350,dialogue,Historia,normal,"I see them. CAS-8 armed. Proceeding to sweep.",30,0
 
 600,scroll_speed,1.5
 650,spawn_enemy,150,-50,10,0.5,3.0,120
 650,spawn_enemy,650,-50,10,-0.5,3.0,120
 
-900,dialogue,Mira,"The density of CyroN interceptors is increasing. Focus on dodging!",35,0
+900,dialogue,Mira,gentle,"The density of CyroN interceptors is increasing. Focus on dodging!",35,0
 
 1100,scroll_speed,1.0
 1200,spawn_enemy,300,-50,12,0.0,2.5,150
 1200,spawn_enemy,500,-50,12,0.0,2.5,150
 
-1500,dialogue,Victoria,"Historia... Mira... Traitorous failures. Your rebellion halts here.",40,3
-1550,dialogue,Historia,"Victoria! Stand down! We don't want to fight you!",30,0
-1600,dialogue,Victoria,"Optimization requires your elimination. Initializing photon blades.",40,5
+1500,dialogue,Victoria,composed,"Historia... Mira... Traitorous failures. Your rebellion halts here.",40,3
+1550,dialogue,Historia,shocked,"Victoria! Stand down! We don't want to fight you!",30,0
+1600,dialogue,Victoria,angry,"Optimization requires your elimination. Initializing photon blades.",40,5
 
 2000,boss,Victoria Koura,1200,400,-80,45,5000

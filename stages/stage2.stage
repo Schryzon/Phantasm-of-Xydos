@@ -14,21 +14,21 @@ star_count = 100
 150,spawn_enemy,200,-50,15,0.0,2.5,200
 150,spawn_enemy,600,-50,15,0.0,2.5,200
 
-300,dialogue,Mira,"The resonance is overwhelming. Xelisa is manipulating the core from within.",35,0
-350,dialogue,Historia,"Then we tear down the core. Let's move.",30,1
+300,dialogue,Mira,shocked,"The resonance is overwhelming. Xelisa is manipulating the core from within.",35,0
+350,dialogue,Historia,angry,"Then we tear down the core. Let's move.",30,1
 
 500,scroll_speed,1.8
 600,spawn_enemy,300,-50,18,0.5,3.5,250
 650,spawn_enemy,500,-50,18,-0.5,3.5,250
 
-850,dialogue,Mira,"Look! The security grids have overridden!",35,4
+850,dialogue,Mira,determined,"Look! The security grids have overridden!",35,4
 
 1100,scroll_speed,1.0
 1200,spawn_enemy,100,-50,22,1.0,2.0,300
 1200,spawn_enemy,700,-50,22,-1.0,2.0,300
 
-1500,dialogue,Xelisa,"Fools. You seek harmony but spawn only wreckage.",40,4
-1550,dialogue,Mira,"Fenria! Break free from the dark contract!",35,0
-1600,dialogue,Xelisa,"She is optimized. She is ours. Witness the absolute network.",40,6
+1500,dialogue,Xelisa,composed,"Fools. You seek harmony but spawn only wreckage.",40,4
+1550,dialogue,Mira,angry,"Fenria! Break free from the dark contract!",35,0
+1600,dialogue,Xelisa,angry,"She is optimized. She is ours. Witness the absolute network.",40,6
 
 2000,boss,Queen Fenria & Xelisa,2000,400,-80,50,10000

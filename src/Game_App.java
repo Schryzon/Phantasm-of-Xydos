@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.List;
 
 public class Game_App extends JFrame {
@@ -496,6 +498,8 @@ public class Game_App extends JFrame {
     }
 
     private class Game_Canvas extends JPanel {
+        private final java.util.Map<String, BufferedImage> portrait_cache = new java.util.HashMap<>();
+
         public Game_Canvas() {
             setFocusable(true);
             addKeyListener(input_manager);
@@ -561,10 +565,39 @@ public class Game_App extends JFrame {
                     g2d.setStroke(new java.awt.BasicStroke(3));
                     g2d.drawRect(box_x, box_y, box_w, box_h);
 
+                    // Dynamically load portrait
+                    BufferedImage portrait = null;
+                    if (dialogue.expression != null && !dialogue.expression.isEmpty()) {
+                        String port_key = dialogue.speaker + "_" + dialogue.expression;
+                        if (portrait_cache.containsKey(port_key)) {
+                            portrait = portrait_cache.get(port_key);
+                        } else {
+                            try {
+                                File port_file = new File("assets/portraits/" + dialogue.speaker + "_" + dialogue.expression + ".png");
+                                if (port_file.exists()) {
+                                    portrait = javax.imageio.ImageIO.read(port_file);
+                                    portrait_cache.put(port_key, portrait);
+                                } else {
+                                    portrait_cache.put(port_key, null);
+                                }
+                            } catch (Exception e) {
+                                portrait_cache.put(port_key, null);
+                            }
+                        }
+                    }
+
+                    // Render portrait if found
+                    if (portrait != null) {
+                        g2d.drawImage(portrait, box_x + 20, box_y + 20, 120, 120, null);
+                    }
+
+                    int text_offset_x = portrait != null ? 160 : 30;
+                    int line_w = portrait != null ? 510 : 640;
+
                     // Draw Speaker name
                     g2d.setFont(new Font("Consolas", Font.BOLD, 20));
                     g2d.setColor(new Color(0, 206, 209));
-                    g2d.drawString(dialogue.speaker, box_x + 30, box_y + 40);
+                    g2d.drawString(dialogue.speaker, box_x + text_offset_x, box_y + 40);
 
                     // Draw typed dialogue text
                     g2d.setFont(new Font("Consolas", Font.PLAIN, 16));
@@ -572,7 +605,6 @@ public class Game_App extends JFrame {
                     
                     String typed_text = dialogue.text.substring(0, engine.stage_manager.dialogue_char_index);
                     int text_y = box_y + 80;
-                    int line_w = 640;
                     FontMetrics fm = g2d.getFontMetrics();
                     String[] words = typed_text.split(" ");
                     StringBuilder current_line = new StringBuilder();
@@ -581,12 +613,12 @@ public class Game_App extends JFrame {
                         if (fm.stringWidth(current_line.toString() + word) < line_w) {
                             current_line.append(word).append(" ");
                         } else {
-                            g2d.drawString(current_line.toString(), box_x + 30, text_y);
+                            g2d.drawString(current_line.toString(), box_x + text_offset_x, text_y);
                             text_y += 24;
                             current_line = new StringBuilder(word + " ");
                         }
                     }
-                    g2d.drawString(current_line.toString(), box_x + 30, text_y);
+                    g2d.drawString(current_line.toString(), box_x + text_offset_x, text_y);
 
                     // Draw skip/advance guide
                     g2d.setFont(new Font("Consolas", Font.ITALIC, 11));

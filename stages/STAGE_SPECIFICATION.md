@@ -69,9 +69,9 @@ Chronological list of occurrences triggered when the viewport reaches the specif
    - Example: `500,spawn_enemy,320,-40,15,0.0,3.0,150`
 
 3. **`dialogue`**:
-   - Syntax: `offset,dialogue,speaker_name,text_string,char_delay_ms,shakiness`
-   - Example: `600,dialogue,Victoria,"Your resistance is futile.",40,4`
-   - *Behavior*: Pauses scrolling and action. Renders visual novel dialogue box typings with character-delay timing, vibrating the box by `shakiness` offset values.
+   - Syntax: `offset,dialogue,speaker_name,expression,text_string,char_delay_ms,shakiness`
+   - Example: `600,dialogue,Victoria,composed,"Your resistance is futile.",40,4`
+   - *Behavior*: Pauses scrolling and action. Displays the character's portrait from `assets/portraits/[speaker]_[expression].png` on the left, typing out text on the right. Vibrates the box by `shakiness` offset values.
 
 4. **`boss`**:
    - Syntax: `offset,boss,boss_name,hp,x,y,radius,score`
