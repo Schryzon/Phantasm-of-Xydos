@@ -1,6 +1,9 @@
+package game.entities;
+
+import game.engine.*;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Font;
 import java.util.List;
 
 public class Enemy_Entity {

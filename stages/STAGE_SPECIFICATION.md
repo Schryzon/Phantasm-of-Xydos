@@ -67,11 +67,18 @@ Chronological list of occurrences triggered when the viewport reaches the specif
 2. **`spawn_enemy`**:
    - Syntax: `offset,spawn_enemy,x,y,hp,vel_x,vel_y,score`
    - Example: `500,spawn_enemy,320,-40,15,0.0,3.0,150`
+   - *Widescreen Mapping*: The `x` coordinate is mapped dynamically from the 800-wide logical grid to the centered 16:9 vertical play field (`[320, 960]`) using: `x_play = 320 + (x * 0.8)`.
+   - *Difficulty Squad Scaling*: If playing on higher difficulties, this event dynamically spawns extra squadron companion drones offset around the main unit:
+     - **Rookie / Trooper**: Spawns 1 drone.
+     - **Elite**: Spawns 2 drones (+1 helper drone at `x + 35`).
+     - **Android**: Spawns 3 drones (+2 helper drones forming a V-formation).
+     - **CyroN**: Spawns 4 drones (+3 helper drones forming a diamond wing squadron).
 
 3. **`dialogue`**:
    - Syntax: `offset,dialogue,speaker_name,expression,text_string,char_delay_ms,shakiness`
    - Example: `600,dialogue,Victoria,composed,"Your resistance is futile.",40,4`
-   - *Behavior*: Pauses scrolling and action. Displays the character's portrait from `assets/portraits/[speaker]_[expression].png` on the left, typing out text on the right. Vibrates the box by `shakiness` offset values.
+   - *Behavior*: Pauses scrolling and action. Displays the character's portrait from `assets/portraits/[speaker]_[expression].png` on the left, typing out text on the right. Vibrates the box by `shakiness` offset values. Pressing `Space` skips the dialogue scene.
+   - *Continuous Flow*: Consecutive dialogue events in the timeline with no spawn events in between them are combined automatically to run in a single continuous visual novel flow without closing/reopening the GUI bar.
 
 4. **`boss`**:
    - Syntax: `offset,boss,boss_name,hp,x,y,radius,score`

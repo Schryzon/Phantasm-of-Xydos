@@ -1,3 +1,5 @@
+package game.entities;
+
 public class Item_Drop {
     public double pos_x;
     public double pos_y;

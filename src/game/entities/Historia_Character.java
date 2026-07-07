@@ -1,3 +1,7 @@
+package game.entities;
+
+import game.engine.*;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.List;
@@ -121,7 +125,6 @@ public class Historia_Character extends Player_Character {
 
         if (shoot_cooldown == 0) {
             int bonus = get_graze_damage_bonus();
-            int ipower = (int) power_level;
             
             // Firing weapon with power level bullet count progression
             if (focused) {

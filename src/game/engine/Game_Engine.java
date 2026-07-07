@@ -1,3 +1,7 @@
+package game.engine;
+
+import game.entities.*;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -351,7 +355,6 @@ public class Game_Engine {
         // Tile background image inside centered area if loaded
         if (bg_image != null) {
             int img_h = bg_image.getHeight();
-            int img_w = bg_image.getWidth();
             int offset_y = (int) (stage_manager.scroll_y % img_h);
             for (int y = -img_h; y < 720 + img_h; y += img_h) {
                 g2d.drawImage(bg_image, 320, y + offset_y, 640, img_h, null);

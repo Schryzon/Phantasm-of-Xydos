@@ -2,5 +2,5 @@
 echo ==========================================
 echo LAUNCHING PHANTASM OF XYDOS...
 echo ==========================================
-java -cp "bin;lib\*" Game_App
+java -cp "bin;lib\*" game.app.Game_App
 pause

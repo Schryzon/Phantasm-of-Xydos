@@ -1,3 +1,8 @@
+package game.app;
+
+import game.engine.*;
+import game.entities.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -108,7 +113,7 @@ public class Game_App extends JFrame {
         title_label.setFont(new Font("Consolas", Font.BOLD, 46));
         title_label.setForeground(new Color(0, 206, 209));
 
-        JLabel subtitle_label = new JLabel("Andromeda I - The Divine Shadows", JLabel.CENTER);
+        JLabel subtitle_label = new JLabel("Andromeda I - Ashes of Divinity", JLabel.CENTER);
         subtitle_label.setFont(new Font("Consolas", Font.ITALIC, 20));
         subtitle_label.setForeground(new Color(138, 43, 226));
 

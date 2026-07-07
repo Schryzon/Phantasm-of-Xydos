@@ -1,3 +1,5 @@
+package game.entities;
+
 import java.awt.Color;
 
 public class Bullet_Entity {

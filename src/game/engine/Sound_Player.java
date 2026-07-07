@@ -1,3 +1,5 @@
+package game.engine;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -7,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Sound_Player {
-    private static final Map<String, Clip> clips = new HashMap<>();
     private static Clip current_music = null;
 
     private static final Map<String, String> sound_map = new HashMap<>();
@@ -53,7 +54,7 @@ public class Sound_Player {
     public static void play_sound(String name) {
         try {
             String file_name = sound_map.getOrDefault(name, name);
-            File sound_file = new File("assets/" + file_name + ".wav");
+            File sound_file = new File("assets/sfx/" + file_name + ".wav");
             if (!sound_file.exists()) {
                 return;
             }
@@ -74,7 +75,7 @@ public class Sound_Player {
                 current_music.close();
             }
 
-            File music_file = new File("assets/" + type + "_bgm.wav");
+            File music_file = new File("assets/bgm/" + type + "_bgm.wav");
             if (!music_file.exists()) {
                 return;
             }
