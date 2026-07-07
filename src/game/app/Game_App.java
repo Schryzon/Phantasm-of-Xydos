@@ -97,8 +97,8 @@ public class Game_App extends JFrame {
                 g.fillRect(0, 0, getWidth(), getHeight());
                 g.setColor(Color.WHITE);
                 for (int i = 0; i < 50; i++) {
-                    int x = (int)(Math.random() * getWidth());
-                    int y = (int)(Math.random() * getHeight());
+                    int x = (int) (Math.random() * getWidth());
+                    int y = (int) (Math.random() * getHeight());
                     g.fillOval(x, y, 2, 2);
                 }
             }
@@ -113,7 +113,7 @@ public class Game_App extends JFrame {
         title_label.setFont(new Font("Consolas", Font.BOLD, 46));
         title_label.setForeground(new Color(0, 206, 209));
 
-        JLabel subtitle_label = new JLabel("Andromeda I - Ashes of Divinity", JLabel.CENTER);
+        JLabel subtitle_label = new JLabel("Andromeda I - The Divine Shadows", JLabel.CENTER);
         subtitle_label.setFont(new Font("Consolas", Font.ITALIC, 20));
         subtitle_label.setForeground(new Color(138, 43, 226));
 
@@ -178,7 +178,8 @@ public class Game_App extends JFrame {
         JPanel hist_card = new JPanel(new BorderLayout());
         hist_card.setBackground(new Color(30, 15, 15));
         hist_card.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
-        JTextArea hist_desc = new JTextArea("\n HISTORIA KOURA\n Vessel of Thunder\n\n - Hitbox: 4.0px\n - Lightning fire (CAS-8 straight lines)\n - Auto melee spear slash (Left->Right Combo)\n - Spell: Lagtanis Karvista\n   (Throws 7 giant boss-seeking spears;\n    hitbox size radius 35px;\n    grants invulnerability)");
+        JTextArea hist_desc = new JTextArea(
+                "\n HISTORIA KOURA\n Vessel of Thunder\n\n - Hitbox: 4.0px\n - Lightning fire (CAS-8 straight lines)\n - Auto melee spear slash (Left->Right Combo)\n - Spell: Lagtanis Karvista\n   (Throws 7 giant boss-seeking spears;\n    hitbox size radius 35px;\n    grants invulnerability)");
         hist_desc.setFont(new Font("Consolas", Font.PLAIN, 15));
         hist_desc.setForeground(Color.WHITE);
         hist_desc.setEditable(false);
@@ -196,7 +197,8 @@ public class Game_App extends JFrame {
         JPanel mira_card = new JPanel(new BorderLayout());
         mira_card.setBackground(new Color(15, 30, 15));
         mira_card.setBorder(BorderFactory.createLineBorder(Color.GREEN, 2));
-        JTextArea mira_desc = new JTextArea("\n MIRA KOURA\n Empathy Wind Weaver\n\n - Hitbox: 2.5px\n - Homing, spread, and straight wind currents\n - Spell: Daiki's Sanctuary\n   (Invulnerable, clears all bullets,\n    damages active bosses on screen)");
+        JTextArea mira_desc = new JTextArea(
+                "\n MIRA KOURA\n Empathy Wind Weaver\n\n - Hitbox: 2.5px\n - Homing, spread, and straight wind currents\n - Spell: Daiki's Sanctuary\n   (Invulnerable, clears all bullets,\n    damages active bosses on screen)");
         mira_desc.setFont(new Font("Consolas", Font.PLAIN, 15));
         mira_desc.setForeground(Color.WHITE);
         mira_desc.setEditable(false);
@@ -235,17 +237,17 @@ public class Game_App extends JFrame {
                 super.paintComponent(g);
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                
+
                 // Dark mystical starfield background
                 g2d.setColor(new Color(5, 5, 15));
                 g2d.fillRect(0, 0, getWidth(), getHeight());
-                
+
                 // Draw decorative floating circles/danmaku arcs in the background
                 g2d.setColor(new Color(138, 43, 226, 30));
                 g2d.setStroke(new BasicStroke(3));
                 g2d.drawOval(100, 100, 300, 300);
                 g2d.drawOval(800, 200, 400, 400);
-                
+
                 g2d.setColor(new Color(0, 206, 209, 20));
                 g2d.drawOval(250, 400, 200, 200);
             }
@@ -271,16 +273,16 @@ public class Game_App extends JFrame {
         desc_label.setPreferredSize(new Dimension(800, 50));
 
         // Touhou-style difficulty buttons
-        JButton rookie_btn = create_difficulty_button("1. Rookie", new Color(46, 139, 87), 
-            "ROOKIE MODE: 0.7x Bullet speed, 1.4x slow cooldowns. Best for novices.", desc_label);
-        JButton trooper_btn = create_difficulty_button("2. Trooper", new Color(218, 165, 32), 
-            "TROOPER MODE: 1.0x standard Touhou speed and frequency. The original design.", desc_label);
-        JButton elite_btn = create_difficulty_button("3. Elite", new Color(138, 43, 226), 
-            "ELITE MODE: 1.35x faster bullets, 0.8x cooldowns. True test of reflexes.", desc_label);
-        JButton android_btn = create_difficulty_button("4. Android", new Color(178, 34, 34), 
-            "ANDROID MODE: 1.7x bullet speed, 0.6x frantic firing rates. Extremely dense.", desc_label);
-        JButton cyron_btn = create_difficulty_button("5. CyroN", new Color(0, 206, 209), 
-            "CYRON MODE: 2.1x absolute velocity, 0.45x cooldowns. A flawless wall of danmaku.", desc_label);
+        JButton rookie_btn = create_difficulty_button("1. Rookie", new Color(46, 139, 87),
+                "ROOKIE MODE: 0.7x Bullet speed, 1.4x slow cooldowns. Best for novices.", desc_label);
+        JButton trooper_btn = create_difficulty_button("2. Trooper", new Color(218, 165, 32),
+                "TROOPER MODE: 1.0x standard Touhou speed and frequency. The original design.", desc_label);
+        JButton elite_btn = create_difficulty_button("3. Elite", new Color(138, 43, 226),
+                "ELITE MODE: 1.35x faster bullets, 0.8x cooldowns. True test of reflexes.", desc_label);
+        JButton android_btn = create_difficulty_button("4. Android", new Color(178, 34, 34),
+                "ANDROID MODE: 1.7x bullet speed, 0.6x frantic firing rates. Extremely dense.", desc_label);
+        JButton cyron_btn = create_difficulty_button("5. CyroN", new Color(0, 206, 209),
+                "CYRON MODE: 2.1x absolute velocity, 0.45x cooldowns. A flawless wall of danmaku.", desc_label);
 
         rookie_btn.addActionListener(e -> start_new_game(selected_character, 0));
         trooper_btn.addActionListener(e -> start_new_game(selected_character, 1));
@@ -293,7 +295,7 @@ public class Game_App extends JFrame {
         main_grid.add(elite_btn, gbc);
         main_grid.add(android_btn, gbc);
         main_grid.add(cyron_btn, gbc);
-        
+
         gbc.insets = new Insets(25, 0, 10, 0);
         main_grid.add(desc_label, gbc);
 
@@ -304,7 +306,7 @@ public class Game_App extends JFrame {
             Sound_Player.play_sound("cancel");
             card_layout.show(main_container, "char_select");
         });
-        
+
         JPanel footer = new JPanel();
         footer.setOpaque(false);
         footer.setBorder(BorderFactory.createEmptyBorder(10, 10, 40, 10));
@@ -314,7 +316,8 @@ public class Game_App extends JFrame {
         return panel;
     }
 
-    private JButton create_difficulty_button(String label, Color highlight_color, String hover_desc, JLabel desc_label) {
+    private JButton create_difficulty_button(String label, Color highlight_color, String hover_desc,
+            JLabel desc_label) {
         JButton btn = new JButton(label);
         btn.setFont(new Font("Georgia", Font.BOLD, 18));
         btn.setForeground(Color.LIGHT_GRAY);
@@ -322,7 +325,7 @@ public class Game_App extends JFrame {
         btn.setFocusPainted(false);
         btn.setBorder(BorderFactory.createLineBorder(new Color(80, 80, 100), 2));
         btn.setPreferredSize(new Dimension(380, 48));
-        
+
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btn.setBackground(highlight_color);
@@ -332,13 +335,14 @@ public class Game_App extends JFrame {
                 desc_label.setForeground(highlight_color);
                 Sound_Player.play_sound("menu_select");
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btn.setBackground(new Color(20, 20, 35));
                 btn.setForeground(Color.LIGHT_GRAY);
                 btn.setBorder(BorderFactory.createLineBorder(new Color(80, 80, 100), 2));
             }
         });
-        
+
         return btn;
     }
 
@@ -390,12 +394,16 @@ public class Game_App extends JFrame {
         JLabel fps_lbl = new JLabel("FPS CAP TARGET:");
         fps_lbl.setFont(new Font("Consolas", Font.BOLD, 16));
         fps_lbl.setForeground(Color.WHITE);
-        String[] fps_options = {"30", "60", "120", "Unlimited"};
+        String[] fps_options = { "30", "60", "120", "Unlimited" };
         JComboBox<String> fps_box = new JComboBox<>(fps_options);
-        if (Config_Manager.fps_limit == 30) fps_box.setSelectedIndex(0);
-        else if (Config_Manager.fps_limit == 60) fps_box.setSelectedIndex(1);
-        else if (Config_Manager.fps_limit == 120) fps_box.setSelectedIndex(2);
-        else fps_box.setSelectedIndex(3);
+        if (Config_Manager.fps_limit == 30)
+            fps_box.setSelectedIndex(0);
+        else if (Config_Manager.fps_limit == 60)
+            fps_box.setSelectedIndex(1);
+        else if (Config_Manager.fps_limit == 120)
+            fps_box.setSelectedIndex(2);
+        else
+            fps_box.setSelectedIndex(3);
         fps_box.addActionListener(e -> {
             String selected = (String) fps_box.getSelectedItem();
             if (selected.equals("Unlimited")) {
@@ -487,8 +495,13 @@ public class Game_App extends JFrame {
         dialog.setVisible(true);
     }
 
-    private interface Key_Getter { int get(); }
-    private interface Key_Setter { void set(int val); }
+    private interface Key_Getter {
+        int get();
+    }
+
+    private interface Key_Setter {
+        void set(int val);
+    }
 
     private void add_rebind_row(JDialog dialog, String action_name, Key_Getter getter, Key_Setter setter) {
         JLabel action_lbl = new JLabel("  " + action_name, JLabel.LEFT);
@@ -575,6 +588,7 @@ public class Game_App extends JFrame {
                 btn.setForeground(Color.BLACK);
                 Sound_Player.play_sound("menu_select");
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btn.setBackground(new Color(30, 30, 60));
                 btn.setForeground(Color.WHITE);
@@ -602,7 +616,8 @@ public class Game_App extends JFrame {
         int timer_delay = 16; // default 60 FPS
         if (Config_Manager.fps_limit > 0) {
             timer_delay = 1000 / Config_Manager.fps_limit;
-            if (timer_delay < 1) timer_delay = 1;
+            if (timer_delay < 1)
+                timer_delay = 1;
         }
 
         game_timer = new Timer(timer_delay, new ActionListener() {
@@ -628,12 +643,14 @@ public class Game_App extends JFrame {
     }
 
     private void handle_game_over() {
-        JOptionPane.showMessageDialog(this, "DESTRUCTION DETECTED. Protocol Aborted.", "XYDOS FAILSAFE TRIGGERED", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "DESTRUCTION DETECTED. Protocol Aborted.", "XYDOS FAILSAFE TRIGGERED",
+                JOptionPane.ERROR_MESSAGE);
         card_layout.show(main_container, "menu");
     }
 
     private void handle_game_win() {
-        String p_name = JOptionPane.showInputDialog(this, "Divine Conquest Complete! Enter codename:", "SYSTEM RESTORED", JOptionPane.PLAIN_MESSAGE);
+        String p_name = JOptionPane.showInputDialog(this, "Divine Conquest Complete! Enter codename:",
+                "SYSTEM RESTORED", JOptionPane.PLAIN_MESSAGE);
         if (p_name != null && !p_name.trim().isEmpty()) {
             String char_name = selected_character == 1 ? "Historia" : "Mira";
             Database_Connector.save_score(p_name.trim(), char_name, engine.score);
@@ -669,7 +686,8 @@ public class Game_App extends JFrame {
 
                 g2d.setFont(new Font("Consolas", Font.ITALIC, 14));
                 g2d.setColor(new Color(0, 206, 209));
-                String stg_name = engine.stage_manager.stage_name != null ? engine.stage_manager.stage_name : "UNKNOWN SECTOR";
+                String stg_name = engine.stage_manager.stage_name != null ? engine.stage_manager.stage_name
+                        : "UNKNOWN SECTOR";
                 g2d.drawString(stg_name, 40, 110);
 
                 // Simple gate vertical borders for aesthetics
@@ -687,7 +705,8 @@ public class Game_App extends JFrame {
                 g2d.rotate(-Math.PI / 2);
                 g2d.setFont(new Font("Consolas", Font.BOLD, 20));
                 g2d.setColor(new Color(255, 255, 255, 120));
-                String current_stg_txt = ("STAGE " + engine.stage_manager.current_stage + ": " + stg_name).toUpperCase();
+                String current_stg_txt = ("STAGE " + engine.stage_manager.current_stage + ": " + stg_name)
+                        .toUpperCase();
                 g2d.drawString(current_stg_txt, 0, 0);
                 g2d.setTransform(orig);
 
@@ -721,7 +740,7 @@ public class Game_App extends JFrame {
                     // Health Bar fill
                     double hp_pct = (double) active_boss.health / active_boss.max_health;
                     g2d.setColor(Color.RED);
-                    g2d.fillRect(350, 50, (int)(580 * hp_pct), 12);
+                    g2d.fillRect(350, 50, (int) (580 * hp_pct), 12);
 
                     g2d.setColor(Color.WHITE);
                     g2d.setStroke(new java.awt.BasicStroke(1));
@@ -740,15 +759,24 @@ public class Game_App extends JFrame {
                 g2d.drawString("〈 Challenge Mode 〉", 1000, 50);
 
                 g2d.setFont(new Font("Consolas", Font.BOLD, 22));
-                
+
                 // Color code the difficulty name
                 String diff_str = "TROOPER";
                 Color diff_color = Color.YELLOW;
-                if (Game_Engine.current_difficulty == 0) { diff_str = "ROOKIE"; diff_color = new Color(46, 139, 87); }
-                else if (Game_Engine.current_difficulty == 2) { diff_str = "ELITE"; diff_color = new Color(138, 43, 226); }
-                else if (Game_Engine.current_difficulty == 3) { diff_str = "ANDROID"; diff_color = new Color(178, 34, 34); }
-                else if (Game_Engine.current_difficulty == 4) { diff_str = "CYRON"; diff_color = new Color(0, 206, 209); }
-                
+                if (Game_Engine.current_difficulty == 0) {
+                    diff_str = "ROOKIE";
+                    diff_color = new Color(46, 139, 87);
+                } else if (Game_Engine.current_difficulty == 2) {
+                    diff_str = "ELITE";
+                    diff_color = new Color(138, 43, 226);
+                } else if (Game_Engine.current_difficulty == 3) {
+                    diff_str = "ANDROID";
+                    diff_color = new Color(178, 34, 34);
+                } else if (Game_Engine.current_difficulty == 4) {
+                    diff_str = "CYRON";
+                    diff_color = new Color(0, 206, 209);
+                }
+
                 g2d.setColor(diff_color);
                 g2d.drawString(diff_str, 1000, 80);
 
@@ -778,13 +806,13 @@ public class Game_App extends JFrame {
                 g2d.drawString("Power    ", 1000, 290);
                 g2d.setColor(Color.DARK_GRAY);
                 g2d.fillRect(1100, 278, 120, 14);
-                
+
                 double power_val = engine.player.power_level;
                 g2d.setColor(Color.MAGENTA);
-                g2d.fillRect(1100, 278, (int)(120 * (power_val / 4.0)), 14);
+                g2d.fillRect(1100, 278, (int) (120 * (power_val / 4.0)), 14);
                 g2d.setColor(Color.WHITE);
                 g2d.drawRect(1100, 278, 120, 14);
-                
+
                 g2d.setFont(new Font("Consolas", Font.BOLD, 10));
                 String p_text = power_val >= 4.0 ? "MAX" : String.format("%.1f", power_val);
                 g2d.drawString(p_text, 1145, 289);
@@ -793,7 +821,8 @@ public class Game_App extends JFrame {
                 g2d.setFont(new Font("Consolas", Font.PLAIN, 18));
                 g2d.drawString("Graze    ", 1000, 330);
                 int graze_bonus = engine.player.get_graze_damage_bonus();
-                g2d.drawString(String.format("%03d (+%d)", (int)(engine.player.bravery_gauge * 2.16), graze_bonus), 1100, 330);
+                g2d.drawString(String.format("%03d (+%d)", (int) (engine.player.bravery_gauge * 2.16), graze_bonus),
+                        1100, 330);
 
                 // Bravery Gauge (Gold/Orange progress bar)
                 g2d.drawString("Bravery  ", 1000, 370);
@@ -801,14 +830,14 @@ public class Game_App extends JFrame {
                 g2d.fillRect(1100, 358, 120, 14);
 
                 double bravery_pct = engine.player.bravery_gauge;
-                Color bravery_color = new Color(255, (int)(255 - (bravery_pct * 1.55)), 0);
+                Color bravery_color = new Color(255, (int) (255 - (bravery_pct * 1.55)), 0);
                 g2d.setColor(bravery_color);
-                g2d.fillRect(1100, 358, (int)(120 * (bravery_pct / 100.0)), 14);
+                g2d.fillRect(1100, 358, (int) (120 * (bravery_pct / 100.0)), 14);
                 g2d.setColor(Color.WHITE);
                 g2d.drawRect(1100, 358, 120, 14);
 
                 g2d.setFont(new Font("Consolas", Font.BOLD, 10));
-                g2d.drawString((int)bravery_pct + "%", 1145, 369);
+                g2d.drawString((int) bravery_pct + "%", 1145, 369);
 
                 // Phantasm Logo at the bottom
                 g2d.setFont(new Font("Consolas", Font.BOLD, 24));
@@ -850,7 +879,8 @@ public class Game_App extends JFrame {
                             portrait = portrait_cache.get(port_key);
                         } else {
                             try {
-                                File port_file = new File("assets/portraits/" + dialogue.speaker + "_" + dialogue.expression + ".png");
+                                File port_file = new File(
+                                        "assets/portraits/" + dialogue.speaker + "_" + dialogue.expression + ".png");
                                 if (port_file.exists()) {
                                     portrait = javax.imageio.ImageIO.read(port_file);
                                     portrait_cache.put(port_key, portrait);
@@ -879,13 +909,13 @@ public class Game_App extends JFrame {
                     // Draw typed text
                     g2d.setFont(new Font("Consolas", Font.PLAIN, 16));
                     g2d.setColor(Color.WHITE);
-                    
+
                     String typed_text = dialogue.text.substring(0, engine.stage_manager.dialogue_char_index);
                     int text_y = box_y + 80;
                     FontMetrics fm = g2d.getFontMetrics();
                     String[] words = typed_text.split(" ");
                     StringBuilder current_line = new StringBuilder();
-                    
+
                     for (String word : words) {
                         if (fm.stringWidth(current_line.toString() + word) < line_w) {
                             current_line.append(word).append(" ");
@@ -917,12 +947,13 @@ public class Game_App extends JFrame {
                     g2d.drawString(pause_txt, 320 + (640 - fm.stringWidth(pause_txt)) / 2, 280);
 
                     g2d.setFont(new Font("Consolas", Font.PLAIN, 20));
-                    
+
                     // Option 0: Resume
                     String opt0 = "RESUME OPERATION";
                     if (engine.pause_selection == 0) {
                         g2d.setColor(Color.CYAN);
-                        g2d.drawString("> " + opt0 + " <", 320 + (640 - g2d.getFontMetrics().stringWidth("> " + opt0 + " <")) / 2, 360);
+                        g2d.drawString("> " + opt0 + " <",
+                                320 + (640 - g2d.getFontMetrics().stringWidth("> " + opt0 + " <")) / 2, 360);
                     } else {
                         g2d.setColor(Color.GRAY);
                         g2d.drawString(opt0, 320 + (640 - g2d.getFontMetrics().stringWidth(opt0)) / 2, 360);
@@ -932,7 +963,8 @@ public class Game_App extends JFrame {
                     String opt1 = "RETURN TO COMMAND DECK";
                     if (engine.pause_selection == 1) {
                         g2d.setColor(Color.RED);
-                        g2d.drawString("> " + opt1 + " <", 320 + (640 - g2d.getFontMetrics().stringWidth("> " + opt1 + " <")) / 2, 410);
+                        g2d.drawString("> " + opt1 + " <",
+                                320 + (640 - g2d.getFontMetrics().stringWidth("> " + opt1 + " <")) / 2, 410);
                     } else {
                         g2d.setColor(Color.GRAY);
                         g2d.drawString(opt1, 320 + (640 - g2d.getFontMetrics().stringWidth(opt1)) / 2, 410);
