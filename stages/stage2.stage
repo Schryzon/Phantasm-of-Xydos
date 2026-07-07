@@ -1,6 +1,6 @@
 [Metadata]
 name = Stage 2: Cybernetic Core
-bgm = assets/stage2_bgm.wav
+bgm = assets/bgm/stage2_bgm.wav
 bg_path = assets/stage2_bg.png
 bg_color = #0F001A
 star_count = 100
@@ -10,46 +10,91 @@ star_count = 100
 2,concentric_circles,#BA55D3,2.5,50
 
 [Events]
+; === OPENING BURST: quick diagonal ambush from both top corners ===
 100,scroll_speed,1.2
-150,spawn_enemy,200,-50,15,0.0,2.5,200
-150,spawn_enemy,600,-50,15,0.0,2.5,200
-180,spawn_enemy,100,-50,12,0.2,2.8,200
-210,spawn_enemy,700,-50,12,-0.2,2.8,200
-240,spawn_enemy,300,-50,15,0.0,3.0,200
-270,spawn_enemy,500,-50,15,0.0,3.0,200
+120,spawn_enemy,0,-50,15,-0.5,3.0,200
+130,spawn_enemy,800,-50,15,0.5,3.0,200
+140,spawn_enemy,0,-50,15,-0.5,3.0,200
+150,spawn_enemy,800,-50,15,0.5,3.0,200
+160,spawn_enemy,0,-50,15,-0.5,3.0,200
+170,spawn_enemy,800,-50,15,0.5,3.0,200
 
+; === CONVERGING COLUMN: 3 columns merge to center ===
+200,spawn_enemy,133,-60,15,0.8,2.5,200
+200,spawn_enemy,400,-60,15,0.0,2.5,200
+200,spawn_enemy,667,-60,15,-0.8,2.5,200
+220,spawn_enemy,133,-60,15,0.8,2.5,200
+220,spawn_enemy,400,-60,15,0.0,2.5,200
+220,spawn_enemy,667,-60,15,-0.8,2.5,200
+240,spawn_enemy,133,-60,15,0.8,2.5,200
+240,spawn_enemy,400,-60,15,0.0,2.5,200
+240,spawn_enemy,667,-60,15,-0.8,2.5,200
+
+; === DIALOGUE BREAK ===
 300,dialogue,Mira,shocked,"The resonance is overwhelming. Xelisa is manipulating the core from within.",35,0
 350,dialogue,Historia,angry,"Then we tear down the core. Let's move.",30,1
 
-500,scroll_speed,1.8
-600,spawn_enemy,300,-50,18,0.5,3.5,250
-650,spawn_enemy,500,-50,18,-0.5,3.5,250
-680,spawn_enemy,200,-50,18,0.4,3.2,250
-710,spawn_enemy,600,-50,18,-0.4,3.2,250
-740,spawn_enemy,100,-50,20,0.6,3.0,300
-770,spawn_enemy,700,-50,20,-0.6,3.0,300
-800,spawn_enemy,400,-50,25,0.0,2.8,400
+; === HIGH-SPEED FLANKING ARCS: enemies sweep from sides in curved paths ===
+420,scroll_speed,1.8
+440,spawn_enemy,50,-50,18,3.5,2.0,250
+450,spawn_enemy,750,-50,18,-3.5,2.0,250
+460,spawn_enemy,50,-50,18,3.5,2.0,250
+470,spawn_enemy,750,-50,18,-3.5,2.0,250
+480,spawn_enemy,50,-50,18,3.5,2.0,250
+490,spawn_enemy,750,-50,18,-3.5,2.0,250
+500,spawn_enemy,50,-50,18,3.5,2.0,250
+510,spawn_enemy,750,-50,18,-3.5,2.0,250
 
-850,dialogue,Mira,determined,"Look! The security grids have overridden!",35,4
+; === DENSE CENTER PUSH: heavy tank column down the middle ===
+540,spawn_enemy,350,-60,22,0.0,2.8,300
+555,spawn_enemy,320,-60,22,0.2,2.8,300
+555,spawn_enemy,480,-60,22,-0.2,2.8,300
+570,spawn_enemy,400,-60,25,0.0,2.5,400
+585,spawn_enemy,280,-60,20,0.3,2.5,250
+585,spawn_enemy,520,-60,20,-0.3,2.5,250
+600,spawn_enemy,400,-60,25,0.0,2.5,400
 
-950,scroll_speed,1.2
-980,spawn_enemy,200,-50,20,0.3,2.5,300
-1010,spawn_enemy,600,-50,20,-0.3,2.5,300
-1040,spawn_enemy,300,-50,20,0.1,2.5,300
-1070,spawn_enemy,500,-50,20,-0.1,2.5,300
+; === DIALOGUE: security grid override ===
+700,dialogue,Mira,determined,"Look! The security grids have overridden!",35,4
 
+; === WIDE SPREAD RAIN: enemies drop from all positions ===
+750,scroll_speed,1.2
+760,spawn_enemy,50,-60,20,0.0,2.5,300
+770,spawn_enemy,180,-60,20,0.0,2.5,300
+780,spawn_enemy,310,-60,20,0.0,2.5,300
+790,spawn_enemy,440,-60,20,0.0,2.5,300
+800,spawn_enemy,570,-60,20,0.0,2.5,300
+810,spawn_enemy,700,-60,20,0.0,2.5,300
+840,spawn_enemy,50,-60,20,0.0,2.5,300
+850,spawn_enemy,180,-60,20,0.0,2.5,300
+860,spawn_enemy,310,-60,20,0.0,2.5,300
+870,spawn_enemy,440,-60,20,0.0,2.5,300
+880,spawn_enemy,570,-60,20,0.0,2.5,300
+890,spawn_enemy,700,-60,20,0.0,2.5,300
+
+; === STAGGER SWEEP: alternating fast waves crossing left-right ===
+960,scroll_speed,1.5
+980,spawn_enemy,0,-50,20,5.0,1.5,300
+1000,spawn_enemy,800,-50,20,-5.0,1.5,300
+1020,spawn_enemy,0,-50,20,5.0,1.5,300
+1040,spawn_enemy,800,-50,20,-5.0,1.5,300
+1060,spawn_enemy,0,-50,20,5.0,1.5,300
+1080,spawn_enemy,800,-50,20,-5.0,1.5,300
+
+; === ARMORED CLUSTER: tight grouped tanks approaching slowly ===
 1100,scroll_speed,1.0
-1200,spawn_enemy,100,-50,22,1.0,2.0,300
-1200,spawn_enemy,700,-50,22,-1.0,2.0,300
-1230,spawn_enemy,250,-50,25,0.2,2.5,350
-1260,spawn_enemy,550,-50,25,-0.2,2.5,350
-1290,spawn_enemy,350,-50,30,0.0,2.0,400
-1320,spawn_enemy,450,-50,30,0.0,2.0,400
-1350,spawn_enemy,150,-50,25,0.5,2.4,300
-1380,spawn_enemy,650,-50,25,-0.5,2.4,300
+1120,spawn_enemy,267,-60,30,0.0,2.0,400
+1120,spawn_enemy,400,-60,30,0.0,2.0,400
+1120,spawn_enemy,533,-60,30,0.0,2.0,400
+1160,spawn_enemy,200,-60,25,0.2,2.0,350
+1160,spawn_enemy,600,-60,25,-0.2,2.0,350
+1200,spawn_enemy,267,-60,30,0.0,2.0,400
+1200,spawn_enemy,400,-60,30,0.0,2.0,400
+1200,spawn_enemy,533,-60,30,0.0,2.0,400
 
-1500,dialogue,Xelisa,composed,"Fools. You seek harmony but spawn only wreckage.",40,4
-1550,dialogue,Mira,angry,"Fenria! Break free from the dark contract!",35,0
-1600,dialogue,Xelisa,angry,"She is optimized. She is ours. Witness the absolute network.",40,6
+; === BOSS APPROACH DIALOGUES ===
+1350,dialogue,Xelisa,composed,"Fools. You seek harmony but spawn only wreckage.",40,4
+1400,dialogue,Mira,angry,"Fenria! Break free from the dark contract!",35,0
+1450,dialogue,Xelisa,angry,"She is optimized. She is ours. Witness the absolute network.",40,6
 
 2000,boss,Queen Fenria & Xelisa,2000,400,-80,50,10000

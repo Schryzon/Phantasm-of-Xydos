@@ -1,6 +1,6 @@
 [Metadata]
 name = Stage 3: Chained Horizons
-bgm = assets/stage3_bgm.wav
+bgm = assets/bgm/stage3_bgm.wav
 bg_path = assets/stage3_bg.png
 bg_color = #001F1F
 star_count = 120
@@ -10,46 +10,99 @@ star_count = 120
 2,chaos_bloom,#FFFFFF,4.5,15
 
 [Events]
+; === SPIRAL DESCENT: enemies enter in rotating spiral from top center ===
 100,scroll_speed,1.0
-150,spawn_enemy,300,-50,25,0.0,2.0,300
-150,spawn_enemy,500,-50,25,0.0,2.0,300
-180,spawn_enemy,200,-50,20,0.2,2.5,250
-210,spawn_enemy,600,-50,20,-0.2,2.5,250
-240,spawn_enemy,100,-50,25,0.4,2.6,300
-270,spawn_enemy,700,-50,25,-0.4,2.6,300
+110,spawn_enemy,400,-60,25,3.0,2.0,300
+120,spawn_enemy,400,-60,25,2.1,2.1,300
+130,spawn_enemy,400,-60,25,0.0,2.5,300
+140,spawn_enemy,400,-60,25,-2.1,2.1,300
+150,spawn_enemy,400,-60,25,-3.0,2.0,300
+160,spawn_enemy,400,-60,25,-2.1,2.1,300
+170,spawn_enemy,400,-60,25,0.0,2.5,300
+180,spawn_enemy,400,-60,25,2.1,2.1,300
+190,spawn_enemy,400,-60,25,3.0,2.0,300
 
+; === FLANKING CROSS: two perpendicular sweeps ===
+220,spawn_enemy,0,-50,25,3.5,2.0,300
+225,spawn_enemy,800,-50,25,-3.5,2.0,300
+230,spawn_enemy,0,-50,25,3.5,2.0,300
+235,spawn_enemy,800,-50,25,-3.5,2.0,300
+240,spawn_enemy,0,-50,25,3.5,2.0,300
+245,spawn_enemy,800,-50,25,-3.5,2.0,300
+
+; === OPENING DIALOGUE ===
 300,dialogue,Historia,shocked,"The atmosphere... gravity is collapsing. Where are we?",30,2
 350,dialogue,Mira,determined,"The Realm of Chained Horizons. Time and space are bound here.",35,0
 
-500,scroll_speed,2.0
-600,spawn_enemy,200,-50,30,0.8,4.0,400
-600,spawn_enemy,600,-50,30,-0.8,4.0,400
-630,spawn_enemy,300,-50,25,0.5,3.8,300
-660,spawn_enemy,500,-50,25,-0.5,3.8,300
-690,spawn_enemy,150,-50,28,0.7,3.5,350
-720,spawn_enemy,650,-50,28,-0.7,3.5,350
-750,spawn_enemy,400,-50,35,0.0,3.2,500
+; === WIDE DIAGONAL FORMATION: diamond shape cascading down ===
+430,scroll_speed,2.0
+440,spawn_enemy,400,-60,30,0.0,4.0,400
+455,spawn_enemy,300,-60,28,0.6,3.8,350
+455,spawn_enemy,500,-60,28,-0.6,3.8,350
+470,spawn_enemy,200,-60,25,1.2,3.5,300
+470,spawn_enemy,600,-60,25,-1.2,3.5,300
+485,spawn_enemy,100,-60,25,1.8,3.2,300
+485,spawn_enemy,700,-60,25,-1.8,3.2,300
+500,spawn_enemy,50,-60,28,2.0,3.0,350
+500,spawn_enemy,750,-60,28,-2.0,3.0,350
 
-800,dialogue,Historia,determined,"No backing down. Lagta's power is fully synchronized.",30,1
+; === STAGGER RUSHERS: fast pairs interleaving from alternate sides ===
+540,spawn_enemy,0,-55,28,5.0,2.0,350
+545,spawn_enemy,800,-55,28,-5.0,2.0,350
+555,spawn_enemy,0,-55,28,5.0,2.0,350
+560,spawn_enemy,800,-55,28,-5.0,2.0,350
+570,spawn_enemy,0,-55,28,5.0,2.0,350
+575,spawn_enemy,800,-55,28,-5.0,2.0,350
+585,spawn_enemy,0,-55,28,5.0,2.0,350
+590,spawn_enemy,800,-55,28,-5.0,2.0,350
 
-900,scroll_speed,1.5
-930,spawn_enemy,250,-50,28,0.3,2.8,350
-960,spawn_enemy,550,-50,28,-0.3,2.8,350
-990,spawn_enemy,100,-50,30,0.5,2.6,400
-1020,spawn_enemy,700,-50,30,-0.5,2.6,400
+; === DIALOGUE BREAK ===
+650,dialogue,Historia,determined,"No backing down. Lagta's power is fully synchronized.",30,1
 
-1100,scroll_speed,1.2
-1200,spawn_enemy,400,-50,35,0.0,3.0,500
-1230,spawn_enemy,200,-50,30,0.3,2.8,400
-1260,spawn_enemy,600,-50,30,-0.3,2.8,400
-1290,spawn_enemy,300,-50,35,0.1,2.8,450
-1320,spawn_enemy,500,-50,35,-0.1,2.8,450
-1350,spawn_enemy,100,-50,30,0.6,2.5,400
-1380,spawn_enemy,700,-50,30,-0.6,2.5,400
-1410,spawn_enemy,400,-50,45,0.0,2.0,800
+; === ACCORDION SPREAD: expands then contracts from center ===
+700,scroll_speed,1.5
+710,spawn_enemy,400,-60,30,0.0,2.8,400
+715,spawn_enemy,340,-60,28,1.5,2.8,350
+715,spawn_enemy,460,-60,28,-1.5,2.8,350
+720,spawn_enemy,267,-60,25,3.0,2.8,300
+720,spawn_enemy,533,-60,25,-3.0,2.8,300
+725,spawn_enemy,133,-60,25,4.0,2.6,300
+725,spawn_enemy,667,-60,25,-4.0,2.6,300
+730,spawn_enemy,50,-60,22,5.0,2.5,280
+730,spawn_enemy,750,-60,22,-5.0,2.5,280
 
-1500,dialogue,Cyria,composed,"Mortals. You have unraveled the dark. Now face the absolute light.",45,3
-1550,dialogue,Mira,gentle,"Goddess Cyria! Let's restore the cosmic balance together!",35,0
-1600,dialogue,Cyria,angry,"Prove your harmony. Survive the beautiful erasure.",45,6
+; === HEAVYWEIGHT GRID: slow armored enemies in a wall formation ===
+800,scroll_speed,1.0
+810,spawn_enemy,100,-60,35,0.0,1.5,450
+810,spawn_enemy,300,-60,35,0.0,1.5,450
+810,spawn_enemy,500,-60,35,0.0,1.5,450
+810,spawn_enemy,700,-60,35,0.0,1.5,450
+850,spawn_enemy,100,-60,35,0.0,1.5,450
+850,spawn_enemy,300,-60,35,0.0,1.5,450
+850,spawn_enemy,500,-60,35,0.0,1.5,450
+850,spawn_enemy,700,-60,35,0.0,1.5,450
+890,spawn_enemy,200,-60,40,0.0,1.5,500
+890,spawn_enemy,400,-60,40,0.0,1.5,500
+890,spawn_enemy,600,-60,40,0.0,1.5,500
+
+; === FINAL RUSH: overlapping waves at high speed from all angles ===
+960,scroll_speed,1.8
+970,spawn_enemy,0,-60,30,4.0,3.0,400
+975,spawn_enemy,800,-60,30,-4.0,3.0,400
+985,spawn_enemy,0,-60,30,4.0,3.0,400
+990,spawn_enemy,800,-60,30,-4.0,3.0,400
+995,spawn_enemy,400,-60,30,0.0,3.5,500
+1005,spawn_enemy,200,-60,28,1.5,3.0,400
+1005,spawn_enemy,600,-60,28,-1.5,3.0,400
+1015,spawn_enemy,100,-60,28,2.5,2.8,400
+1015,spawn_enemy,700,-60,28,-2.5,2.8,400
+1025,spawn_enemy,0,-60,30,4.0,3.0,400
+1030,spawn_enemy,800,-60,30,-4.0,3.0,400
+1040,spawn_enemy,400,-60,35,0.0,3.0,500
+
+; === BOSS APPROACH DIALOGUES ===
+1250,dialogue,Cyria,composed,"Mortals. You have unraveled the dark. Now face the absolute light.",45,3
+1300,dialogue,Mira,gentle,"Goddess Cyria! Let's restore the cosmic balance together!",35,0
+1350,dialogue,Cyria,angry,"Prove your harmony. Survive the beautiful erasure.",45,6
 
 2000,boss,Goddess Cyria,3000,400,-80,55,20000

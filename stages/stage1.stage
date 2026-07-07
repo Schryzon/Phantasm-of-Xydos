@@ -1,6 +1,6 @@
 [Metadata]
 name = Stage 1: Schryza Warzone
-bgm = assets/stage1_bgm.wav
+bgm = assets/bgm/stage1_bgm.wav
 bg_path = assets/stage1_bg.png
 bg_color = #0A0A19
 star_count = 80
@@ -10,61 +10,92 @@ star_count = 80
 2,spiral,#FFAA00,4.0,20
 
 [Events]
+; === OPENING SWEEP: Left-to-right triple line marching down ===
 100,scroll_speed,1.0
-150,spawn_enemy,200,-50,8,-0.2,2.0,100
-150,spawn_enemy,400,-50,8,0.0,2.0,100
-150,spawn_enemy,600,-50,8,0.2,2.0,100
-180,spawn_enemy,150,-50,8,0.1,2.0,100
-180,spawn_enemy,650,-50,8,-0.1,2.0,100
-210,spawn_enemy,300,-50,8,0.0,2.5,100
-240,spawn_enemy,500,-50,8,0.0,2.5,100
-270,spawn_enemy,200,-50,8,0.2,2.2,100
-270,spawn_enemy,600,-50,8,-0.2,2.2,100
+150,spawn_enemy,0,50,8,2.5,1.5,100
+160,spawn_enemy,0,20,8,2.5,1.5,100
+170,spawn_enemy,0,-10,8,2.5,1.5,100
+180,spawn_enemy,0,-40,8,2.5,1.5,100
+190,spawn_enemy,0,-70,8,2.5,1.5,100
 
+; === RIGHT SIDE MIRROR SWEEP ===
+200,spawn_enemy,800,50,8,-2.5,1.5,100
+210,spawn_enemy,800,20,8,-2.5,1.5,100
+220,spawn_enemy,800,-10,8,-2.5,1.5,100
+230,spawn_enemy,800,-40,8,-2.5,1.5,100
+240,spawn_enemy,800,-70,8,-2.5,1.5,100
+
+; === OPENING DIALOGUE ===
 300,dialogue,Mira,determined,"Historia, stay sharp! We have entered CyroN airspace.",35,2
 350,dialogue,Historia,normal,"I see them. CAS-8 armed. Proceeding to sweep.",30,0
 
+; === V-FORMATION DIVE: enemies enter from top, spread outward ===
 400,scroll_speed,1.2
-420,spawn_enemy,100,-50,10,0.3,2.4,120
-440,spawn_enemy,700,-50,10,-0.3,2.4,120
-460,spawn_enemy,200,-50,10,0.1,2.4,120
-480,spawn_enemy,600,-50,10,-0.1,2.4,120
-500,spawn_enemy,400,-50,12,0.0,2.8,150
-530,spawn_enemy,300,-50,10,0.2,2.5,120
-560,spawn_enemy,500,-50,10,-0.2,2.5,120
+420,spawn_enemy,400,-60,10,0.0,2.8,120
+430,spawn_enemy,320,-60,10,-0.5,2.8,120
+430,spawn_enemy,480,-60,10,0.5,2.8,120
+440,spawn_enemy,240,-60,10,-1.0,2.8,120
+440,spawn_enemy,560,-60,10,1.0,2.8,120
+450,spawn_enemy,160,-60,10,-1.4,2.8,120
+450,spawn_enemy,640,-60,10,1.4,2.8,120
 
+; === PINCER WAVE: two groups from opposite sides converging to center ===
+520,spawn_enemy,0,-50,10,3.0,2.0,120
+530,spawn_enemy,0,-50,10,3.0,2.0,120
+540,spawn_enemy,800,-50,10,-3.0,2.0,120
+550,spawn_enemy,800,-50,10,-3.0,2.0,120
+560,spawn_enemy,0,-50,10,3.0,2.0,120
+570,spawn_enemy,800,-50,10,-3.0,2.0,120
+
+; === SPEED UP + DIAGONAL RAIN ===
 600,scroll_speed,1.5
-650,spawn_enemy,150,-50,10,0.5,3.0,120
-650,spawn_enemy,650,-50,10,-0.5,3.0,120
-680,spawn_enemy,250,-50,12,0.3,3.0,120
-710,spawn_enemy,550,-50,12,-0.3,3.0,120
-740,spawn_enemy,350,-50,12,0.0,3.2,150
-770,spawn_enemy,450,-50,12,0.0,3.2,150
-800,spawn_enemy,200,-50,15,0.4,2.8,180
-830,spawn_enemy,600,-50,15,-0.4,2.8,180
-860,spawn_enemy,400,-50,20,0.0,2.5,250
+610,spawn_enemy,100,-60,10,1.0,3.0,120
+620,spawn_enemy,200,-60,10,0.8,3.0,120
+630,spawn_enemy,300,-60,10,0.6,3.0,120
+640,spawn_enemy,400,-60,12,0.0,3.2,150
+650,spawn_enemy,500,-60,10,-0.6,3.0,120
+660,spawn_enemy,600,-60,10,-0.8,3.0,120
+670,spawn_enemy,700,-60,10,-1.0,3.0,120
 
+; === SPIRAL FLANKERS: two arcs closing from sides ===
+720,spawn_enemy,50,-50,12,1.5,2.5,150
+730,spawn_enemy,750,-50,12,-1.5,2.5,150
+740,spawn_enemy,100,-50,12,1.2,2.5,150
+750,spawn_enemy,700,-50,12,-1.2,2.5,150
+760,spawn_enemy,150,-50,12,1.0,2.5,150
+770,spawn_enemy,650,-50,12,-1.0,2.5,150
+780,spawn_enemy,200,-50,12,0.8,2.5,150
+790,spawn_enemy,600,-50,12,-0.8,2.5,150
+
+; === MID-STAGE REST + DIALOGUE ===
 900,dialogue,Mira,gentle,"The density of CyroN interceptors is increasing. Focus on dodging!",35,0
 
+; === HEAVY GUARD FORMATION: slow tanky drones in a grid ===
 950,scroll_speed,1.0
-980,spawn_enemy,100,-50,15,0.5,2.0,180
-1010,spawn_enemy,700,-50,15,-0.5,2.0,180
-1040,spawn_enemy,250,-50,15,0.2,2.2,180
-1070,spawn_enemy,550,-50,15,-0.2,2.2,180
+960,spawn_enemy,133,-50,20,0.0,1.8,200
+960,spawn_enemy,400,-50,20,0.0,1.8,200
+960,spawn_enemy,667,-50,20,0.0,1.8,200
+990,spawn_enemy,267,-50,20,0.0,1.8,200
+990,spawn_enemy,533,-50,20,0.0,1.8,200
+1020,spawn_enemy,133,-50,20,0.0,1.8,200
+1020,spawn_enemy,400,-50,20,0.0,1.8,200
+1020,spawn_enemy,667,-50,20,0.0,1.8,200
 
-1100,scroll_speed,1.2
-1200,spawn_enemy,300,-50,12,0.0,2.5,150
-1200,spawn_enemy,500,-50,12,0.0,2.5,150
-1230,spawn_enemy,200,-50,15,0.3,2.5,150
-1260,spawn_enemy,600,-50,15,-0.3,2.5,150
-1290,spawn_enemy,400,-50,25,0.0,2.0,300
-1320,spawn_enemy,100,-50,15,0.4,2.6,150
-1350,spawn_enemy,700,-50,15,-0.4,2.6,150
-1380,spawn_enemy,300,-50,15,0.1,2.5,150
-1410,spawn_enemy,500,-50,15,-0.1,2.5,150
+; === PRE-BOSS RUSH: fast criss-crossing lasers ===
+1100,scroll_speed,1.4
+1120,spawn_enemy,0,-60,15,4.0,2.0,180
+1130,spawn_enemy,800,-60,15,-4.0,2.0,180
+1150,spawn_enemy,0,-60,15,4.0,2.0,180
+1160,spawn_enemy,800,-60,15,-4.0,2.0,180
+1180,spawn_enemy,0,-60,15,4.0,2.0,180
+1190,spawn_enemy,800,-60,15,-4.0,2.0,180
+1200,spawn_enemy,400,-60,25,0.0,2.2,300
+1220,spawn_enemy,200,-60,20,0.5,2.2,200
+1220,spawn_enemy,600,-60,20,-0.5,2.2,200
 
-1500,dialogue,Victoria,composed,"Historia... Mira... Traitorous failures. Your rebellion halts here.",40,3
-1550,dialogue,Historia,shocked,"Victoria! Stand down! We don't want to fight you!",30,0
-1600,dialogue,Victoria,angry,"Optimization requires your elimination. Initializing photon blades.",40,5
+; === BOSS APPROACH DIALOGUE ===
+1400,dialogue,Victoria,composed,"Historia... Mira... Traitorous failures. Your rebellion halts here.",40,3
+1450,dialogue,Historia,shocked,"Victoria! Stand down! We don't want to fight you!",30,0
+1500,dialogue,Victoria,angry,"Optimization requires your elimination. Initializing photon blades.",40,5
 
 2000,boss,Victoria Koura,1200,400,-80,45,5000
