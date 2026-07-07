@@ -1,7 +1,7 @@
-package Tour_Stack_Queue;
+package Custom_DSA.Stack_Queue;
 
-import Tour_Lists.*;
-import Tour_Nodes.*;
+import Custom_DSA.Lists.*;
+import Custom_DSA.Nodes.*;
 
 /**
  * Linked stack (LIFO) implemented on top of previous Linked_List ADT.

@@ -1,6 +1,6 @@
-package Tour_Lists;
+package Custom_DSA.Lists;
 
-import Tour_Nodes.*;
+import Custom_DSA.Nodes.*;
 
 public class Doubly_Linked_List<T extends Comparable<T>>
     extends Linked_List<T> {

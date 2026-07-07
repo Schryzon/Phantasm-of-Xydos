@@ -1,4 +1,4 @@
-package Tour_Nodes;
+package Custom_DSA.Nodes;
 
 public class Doubly_Node<T> extends Node<T> {
 

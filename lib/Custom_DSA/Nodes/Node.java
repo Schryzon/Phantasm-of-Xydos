@@ -1,4 +1,4 @@
-package Tour_Nodes;
+package Custom_DSA.Nodes;
 
 public abstract class Node<T> {
 

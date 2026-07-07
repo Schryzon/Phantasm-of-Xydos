@@ -1,9 +1,9 @@
-package Tour_Graph;
+package Custom_DSA.Graph;
 
-import Tour_Lists.Linked_List;
-import Tour_Nodes.Node;
-import Tour_Stack_Queue.Linked_Queue;
-import Tour_Stack_Queue.Linked_Stack;
+import Custom_DSA.Lists.Linked_List;
+import Custom_DSA.Nodes.Node;
+import Custom_DSA.Stack_Queue.Linked_Queue;
+import Custom_DSA.Stack_Queue.Linked_Stack;
 
 @SuppressWarnings("unchecked")
 public class Generic_Graph<T extends Comparable<T>> {

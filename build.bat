@@ -32,7 +32,7 @@ if not exist !NATIVELOADER_JAR! (
 )
 
 echo [INFO] Compiling game engine and GUI classes...
-javac -d bin -cp "bin;lib\*" src\*.java
+javac -d bin -cp "bin;lib\*" src\*.java lib\Custom_DSA\Lists\*.java lib\Custom_DSA\Nodes\*.java lib\Custom_DSA\Stack_Queue\*.java lib\Custom_DSA\Graph\*.java
 
 if %ERRORLEVEL% EQU 0 (
     echo [SUCCESS] Build completed successfully. Use run.bat to execute.

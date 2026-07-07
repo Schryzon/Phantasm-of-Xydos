@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import Custom_DSA.Stack_Queue.Linked_Queue;
 
 public class Stage_Manager {
     public int current_stage = 1;
@@ -22,7 +23,7 @@ public class Stage_Manager {
     public int star_count = 80;
 
     // Events timeline
-    public static class Stage_Event {
+    public static class Stage_Event implements Comparable<Stage_Event> {
         public double offset;
         public String type; // "scroll_speed", "spawn_enemy", "dialogue", "boss"
         
@@ -42,6 +43,11 @@ public class Stage_Manager {
         
         // Internal flag
         public boolean triggered = false;
+
+        @Override
+        public int compareTo(Stage_Event other) {
+            return Double.compare(this.offset, other.offset);
+        }
     }
 
     public static class Boss_Spell {
@@ -55,8 +61,8 @@ public class Stage_Manager {
     public List<Stage_Event> event_timeline = new ArrayList<>();
     public List<Boss_Spell> boss_spells = new ArrayList<>();
     
-    // Dialogue engine states
-    public List<Stage_Event> active_dialogues = new ArrayList<>();
+    // Dialogue engine states using our custom DSA queue
+    public Linked_Queue<Stage_Event> active_dialogues = new Linked_Queue<>();
     public boolean is_in_dialogue = false;
     public Stage_Event current_dialogue = null;
     public int dialogue_char_index = 0;
@@ -70,7 +76,7 @@ public class Stage_Manager {
     public void load_stage_file(String file_path) {
         event_timeline.clear();
         boss_spells.clear();
-        active_dialogues.clear();
+        active_dialogues = new Linked_Queue<>();
         is_in_dialogue = false;
         current_dialogue = null;
         boss_spawned = false;
@@ -314,7 +320,7 @@ public class Stage_Manager {
         dialogue_char_index = 0;
         dialogue_timer = 0;
         is_dialogue_finished = false;
-        current_dialogue = active_dialogues.remove(0);
+        current_dialogue = active_dialogues.dequeue();
     }
 
     public void advance_dialogue() {
@@ -325,7 +331,7 @@ public class Stage_Manager {
             dialogue_char_index = current_dialogue.text.length();
             is_dialogue_finished = true;
         } else {
-            if (!active_dialogues.isEmpty()) {
+            if (!active_dialogues.is_empty()) {
                 start_dialogue_cutscene();
             } else {
                 // Done with dialogue chain
@@ -337,7 +343,7 @@ public class Stage_Manager {
 
     public void skip_dialogue() {
         if (!is_in_dialogue) return;
-        active_dialogues.clear();
+        active_dialogues = new Linked_Queue<>();
         is_in_dialogue = false;
         current_dialogue = null;
     }
