@@ -141,7 +141,7 @@ public class Game_Engine {
         if (player.pos_y < 20) player.pos_y = 20;
         if (player.pos_y > 700) player.pos_y = 700;
 
-        player.update_player();
+        player.update_player(bullet_pool);
 
         if (input_manager.shoot) {
             player.fire_weapon(bullet_pool, input_manager.focus, enemies);
@@ -153,11 +153,6 @@ public class Game_Engine {
 
         // 3. Update stage waves (offset bounds adjusted to match center column)
         stage_manager.update_stage(enemies);
-        // Force spawn inside play area
-        for (Enemy_Entity e : enemies) {
-            if (e.pos_x < 320) e.pos_x = 320 + Math.random() * 640;
-            if (e.pos_x > 960) e.pos_x = 320 + Math.random() * 640;
-        }
 
         // 4. Update enemies & their bullets
         for (int i = enemies.size() - 1; i >= 0; i--) {

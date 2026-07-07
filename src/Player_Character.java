@@ -27,7 +27,7 @@ public abstract class Player_Character {
         this.power_level = 1.0;
     }
 
-    public void update_player() {
+    public void update_player(Bullet_Pool pool) {
         if (invulnerability_timer > 0) {
             invulnerability_timer--;
             if (invulnerability_timer <= 0) {
@@ -56,6 +56,12 @@ public abstract class Player_Character {
         pos_x = 640; // Reset position
         pos_y = 600;
         bravery_gauge = 0.0; // Reset bravery gauge upon taking damage
+
+        if (xydos_count < 0) {
+            Sound_Player.play_sound("pldead");
+        } else {
+            Sound_Player.play_sound("damage");
+        }
     }
 
     public int get_graze_damage_bonus() {

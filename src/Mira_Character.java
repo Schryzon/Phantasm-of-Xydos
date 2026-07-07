@@ -21,35 +21,78 @@ public class Mira_Character extends Player_Character {
         if (shoot_cooldown == 0) {
             int bonus = get_graze_damage_bonus();
             int ipower = (int) power_level;
+            
             if (focused) {
-                // Focus Mode: Concentrated straight fire (high DPS, narrow stream)
-                pool.acquire_bullet(pos_x - 4, pos_y - 12, 0, -14, 3, 0, 2 + ipower + bonus, Color.GREEN);
-                pool.acquire_bullet(pos_x + 4, pos_y - 12, 0, -14, 3, 0, 2 + ipower + bonus, Color.GREEN);
-                pool.acquire_bullet(pos_x - 10, pos_y - 8, 0, -13, 3, 0, 1 + ipower + bonus, Color.GREEN);
-                pool.acquire_bullet(pos_x + 10, pos_y - 8, 0, -13, 3, 0, 1 + ipower + bonus, Color.GREEN);
+                // Focus Mode Concentrated straight fire progression
+                if (power_level < 2.0) {
+                    pool.acquire_bullet(pos_x, pos_y - 12, 0, -14, 3, 0, 2 + bonus, Color.GREEN);
+                } else if (power_level >= 2.0 && power_level < 3.0) {
+                    pool.acquire_bullet(pos_x - 4, pos_y - 12, 0, -14, 3, 0, 2 + ipower + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x + 4, pos_y - 12, 0, -14, 3, 0, 2 + ipower + bonus, Color.GREEN);
+                } else if (power_level >= 3.0 && power_level < 4.0) {
+                    pool.acquire_bullet(pos_x - 6, pos_y - 12, 0, -14, 3, 0, 2 + ipower + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x, pos_y - 14, 0, -15, 3, 0, 3 + ipower + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x + 6, pos_y - 12, 0, -14, 3, 0, 2 + ipower + bonus, Color.GREEN);
+                } else { // MAX Power
+                    pool.acquire_bullet(pos_x - 8, pos_y - 10, 0, -14, 3, 0, 2 + ipower + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x - 3, pos_y - 14, 0, -15, 3, 0, 3 + ipower + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x + 3, pos_y - 14, 0, -15, 3, 0, 3 + ipower + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x + 8, pos_y - 10, 0, -14, 3, 0, 2 + ipower + bonus, Color.GREEN);
+                }
             } else {
                 // Unfocused: Straight-fire + Spread-fire + Homing wind blades
-                // 1. Straight-fire
-                pool.acquire_bullet(pos_x, pos_y - 12, 0, -11, 4, 0, 2 + ipower + bonus, Color.GREEN);
+                if (power_level < 2.0) {
+                    // Weak single straight + 2 spread
+                    pool.acquire_bullet(pos_x, pos_y - 12, 0, -11, 4, 0, 2 + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x, pos_y - 8, -1.5, -10, 3.5, 0, 1 + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x, pos_y - 8, 1.5, -10, 3.5, 0, 1 + bonus, Color.GREEN);
+                } else if (power_level >= 2.0 && power_level < 3.0) {
+                    // Standard: 1 straight, 2 spread, 1 homing
+                    pool.acquire_bullet(pos_x, pos_y - 12, 0, -11, 4, 0, 2 + ipower + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x, pos_y - 8, -2, -10, 3.5, 0, 1 + ipower + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x, pos_y - 8, 2, -10, 3.5, 0, 1 + ipower + bonus, Color.GREEN);
+                    
+                    Bullet_Entity h = pool.acquire_bullet(pos_x, pos_y, 0, -8, 3, 4, 1 + ipower + bonus, Color.WHITE);
+                    if (h != null) {
+                        h.is_homing = true;
+                        h.speed = 9;
+                    }
+                } else if (power_level >= 3.0 && power_level < 4.0) {
+                    // Strong: 2 straight, 4 spread, 2 homing
+                    pool.acquire_bullet(pos_x - 6, pos_y - 12, 0, -11, 4, 0, 2 + ipower + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x + 6, pos_y - 12, 0, -11, 4, 0, 2 + ipower + bonus, Color.GREEN);
+                    
+                    pool.acquire_bullet(pos_x, pos_y - 8, -2, -10, 3.5, 0, 1 + ipower + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x, pos_y - 8, 2, -10, 3.5, 0, 1 + ipower + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x, pos_y - 5, -4, -9, 3, 0, 1 + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x, pos_y - 5, 4, -9, 3, 0, 1 + bonus, Color.GREEN);
 
-                // 2. Spread-fire (angled outwards)
-                pool.acquire_bullet(pos_x, pos_y - 8, -2, -10, 3.5, 0, 1 + ipower + bonus, Color.GREEN);
-                pool.acquire_bullet(pos_x, pos_y - 8, 2, -10, 3.5, 0, 1 + ipower + bonus, Color.GREEN);
-                pool.acquire_bullet(pos_x, pos_y - 5, -4, -9, 3, 0, 1 + bonus, Color.GREEN);
-                pool.acquire_bullet(pos_x, pos_y - 5, 4, -9, 3, 0, 1 + bonus, Color.GREEN);
+                    Bullet_Entity h1 = pool.acquire_bullet(pos_x - 15, pos_y, -1, -8, 3, 4, 1 + ipower + bonus, Color.WHITE);
+                    Bullet_Entity h2 = pool.acquire_bullet(pos_x + 15, pos_y, 1, -8, 3, 4, 1 + ipower + bonus, Color.WHITE);
+                    if (h1 != null) { h1.is_homing = true; h1.speed = 9; }
+                    if (h2 != null) { h2.is_homing = true; h2.speed = 9; }
+                } else { // MAX Power
+                    // Max: 3 straight, 4 spread, 4 homing
+                    pool.acquire_bullet(pos_x - 8, pos_y - 10, 0, -11, 4, 0, 2 + ipower + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x, pos_y - 14, 0, -12, 5, 0, 3 + ipower + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x + 8, pos_y - 10, 0, -11, 4, 0, 2 + ipower + bonus, Color.GREEN);
+                    
+                    pool.acquire_bullet(pos_x, pos_y - 8, -2.5, -10, 3.5, 0, 1 + ipower + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x, pos_y - 8, 2.5, -10, 3.5, 0, 1 + ipower + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x, pos_y - 5, -4.5, -9, 3, 0, 1 + bonus, Color.GREEN);
+                    pool.acquire_bullet(pos_x, pos_y - 5, 4.5, -9, 3, 0, 1 + bonus, Color.GREEN);
 
-                // 3. Homing wind blades (type 4 - homing bullet)
-                Bullet_Entity h1 = pool.acquire_bullet(pos_x - 15, pos_y, -1, -8, 3, 4, 1 + ipower + bonus, Color.WHITE);
-                Bullet_Entity h2 = pool.acquire_bullet(pos_x + 15, pos_y, 1, -8, 3, 4, 1 + ipower + bonus, Color.WHITE);
-                if (h1 != null) {
-                    h1.is_homing = true;
-                    h1.speed = 9;
-                }
-                if (h2 != null) {
-                    h2.is_homing = true;
-                    h2.speed = 9;
+                    Bullet_Entity h1 = pool.acquire_bullet(pos_x - 18, pos_y, -1.5, -8, 3, 4, 1 + ipower + bonus, Color.WHITE);
+                    Bullet_Entity h2 = pool.acquire_bullet(pos_x - 8, pos_y, -0.5, -8, 3, 4, 1 + ipower + bonus, Color.WHITE);
+                    Bullet_Entity h3 = pool.acquire_bullet(pos_x + 8, pos_y, 0.5, -8, 3, 4, 1 + ipower + bonus, Color.WHITE);
+                    Bullet_Entity h4 = pool.acquire_bullet(pos_x + 18, pos_y, 1.5, -8, 3, 4, 1 + ipower + bonus, Color.WHITE);
+                    if (h1 != null) { h1.is_homing = true; h1.speed = 9; }
+                    if (h2 != null) { h2.is_homing = true; h2.speed = 9; }
+                    if (h3 != null) { h3.is_homing = true; h3.speed = 9; }
+                    if (h4 != null) { h4.is_homing = true; h4.speed = 9; }
                 }
             }
+            Sound_Player.play_sound("shoot");
             shoot_cooldown = 7;
         }
     }

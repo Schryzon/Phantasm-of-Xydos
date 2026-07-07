@@ -535,11 +535,12 @@ public class Game_App extends JFrame {
 
                 // Rotated banner
                 java.awt.geom.AffineTransform orig = g2d.getTransform();
-                g2d.translate(80, 480);
+                g2d.translate(80, 600);
                 g2d.rotate(-Math.PI / 2);
-                g2d.setFont(new Font("Consolas", Font.BOLD, 28));
-                g2d.setColor(new Color(255, 255, 255, 100));
-                g2d.drawString("SCARLET BORDER", 0, 0);
+                g2d.setFont(new Font("Consolas", Font.BOLD, 20));
+                g2d.setColor(new Color(255, 255, 255, 120));
+                String current_stg_txt = ("STAGE " + engine.stage_manager.current_stage + ": " + stg_name).toUpperCase();
+                g2d.drawString(current_stg_txt, 0, 0);
                 g2d.setTransform(orig);
 
                 // ==========================================

@@ -231,21 +231,45 @@ public class Stage_Manager {
                 this.scroll_speed = ev.vel_y;
                 break;
             case "spawn_enemy":
-                Enemy_Entity drone = new Enemy_Entity(ev.x, ev.y, ev.radius, ev.hp, false, "", ev.score);
+                double mapped_x = 320.0 + (ev.x * 0.8);
+                Enemy_Entity drone = new Enemy_Entity(mapped_x, ev.y, ev.radius, ev.hp, false, "", ev.score);
                 drone.vel_x = ev.vel_x;
                 drone.vel_y = ev.vel_y;
                 enemies.add(drone);
                 break;
             case "dialogue":
                 active_dialogues.add(ev);
+                // Lookahead to find adjacent dialogues that are consecutive in the timeline
+                // and have no enemy or boss spawns in between them.
+                int ev_index = event_timeline.indexOf(ev);
+                if (ev_index != -1) {
+                    for (int j = ev_index + 1; j < event_timeline.size(); j++) {
+                        Stage_Event next_ev = event_timeline.get(j);
+                        if (next_ev.triggered) continue;
+                        if (next_ev.type.equals("dialogue")) {
+                            boolean obstacle = false;
+                            for (int k = ev_index + 1; k < j; k++) {
+                                Stage_Event between = event_timeline.get(k);
+                                if (!between.triggered && (between.type.equals("spawn_enemy") || between.type.equals("boss"))) {
+                                    obstacle = true;
+                                    break;
+                                }
+                            }
+                            if (!obstacle) {
+                                next_ev.triggered = true;
+                                active_dialogues.add(next_ev);
+                            }
+                        }
+                    }
+                }
                 if (!is_in_dialogue) {
                     start_dialogue_cutscene();
                 }
                 break;
             case "boss":
                 boss_spawned = true;
-                Enemy_Entity boss = new Enemy_Entity(ev.x, ev.y, ev.radius, ev.hp, true, ev.name, ev.score);
-                // Assign stage custom spells from parsing
+                double mapped_boss_x = 320.0 + (ev.x * 0.8);
+                Enemy_Entity boss = new Enemy_Entity(mapped_boss_x, ev.y, ev.radius, ev.hp, true, ev.name, ev.score);
                 enemies.add(boss);
                 Sound_Player.play_music("boss");
                 break;

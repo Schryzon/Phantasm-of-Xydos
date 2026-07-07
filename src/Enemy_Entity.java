@@ -38,9 +38,9 @@ public class Enemy_Entity {
         pos_y += vel_y;
         pattern_timer++;
 
-        // Bound checking for non-bosses
+        // Bound checking for non-bosses (clamped to widescreen play field)
         if (!is_boss) {
-            if (pos_y > 850 || pos_y < -100 || pos_x < -100 || pos_x > 900) {
+            if (pos_y > 750 || pos_y < -150 || pos_x < 250 || pos_x > 1030) {
                 is_active = false;
             }
         }

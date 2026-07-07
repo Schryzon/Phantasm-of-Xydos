@@ -14,19 +14,54 @@ star_count = 80
 150,spawn_enemy,200,-50,8,-0.2,2.0,100
 150,spawn_enemy,400,-50,8,0.0,2.0,100
 150,spawn_enemy,600,-50,8,0.2,2.0,100
+180,spawn_enemy,150,-50,8,0.1,2.0,100
+180,spawn_enemy,650,-50,8,-0.1,2.0,100
+210,spawn_enemy,300,-50,8,0.0,2.5,100
+240,spawn_enemy,500,-50,8,0.0,2.5,100
+270,spawn_enemy,200,-50,8,0.2,2.2,100
+270,spawn_enemy,600,-50,8,-0.2,2.2,100
 
 300,dialogue,Mira,determined,"Historia, stay sharp! We have entered CyroN airspace.",35,2
 350,dialogue,Historia,normal,"I see them. CAS-8 armed. Proceeding to sweep.",30,0
 
+400,scroll_speed,1.2
+420,spawn_enemy,100,-50,10,0.3,2.4,120
+440,spawn_enemy,700,-50,10,-0.3,2.4,120
+460,spawn_enemy,200,-50,10,0.1,2.4,120
+480,spawn_enemy,600,-50,10,-0.1,2.4,120
+500,spawn_enemy,400,-50,12,0.0,2.8,150
+530,spawn_enemy,300,-50,10,0.2,2.5,120
+560,spawn_enemy,500,-50,10,-0.2,2.5,120
+
 600,scroll_speed,1.5
 650,spawn_enemy,150,-50,10,0.5,3.0,120
 650,spawn_enemy,650,-50,10,-0.5,3.0,120
+680,spawn_enemy,250,-50,12,0.3,3.0,120
+710,spawn_enemy,550,-50,12,-0.3,3.0,120
+740,spawn_enemy,350,-50,12,0.0,3.2,150
+770,spawn_enemy,450,-50,12,0.0,3.2,150
+800,spawn_enemy,200,-50,15,0.4,2.8,180
+830,spawn_enemy,600,-50,15,-0.4,2.8,180
+860,spawn_enemy,400,-50,20,0.0,2.5,250
 
 900,dialogue,Mira,gentle,"The density of CyroN interceptors is increasing. Focus on dodging!",35,0
 
-1100,scroll_speed,1.0
+950,scroll_speed,1.0
+980,spawn_enemy,100,-50,15,0.5,2.0,180
+1010,spawn_enemy,700,-50,15,-0.5,2.0,180
+1040,spawn_enemy,250,-50,15,0.2,2.2,180
+1070,spawn_enemy,550,-50,15,-0.2,2.2,180
+
+1100,scroll_speed,1.2
 1200,spawn_enemy,300,-50,12,0.0,2.5,150
 1200,spawn_enemy,500,-50,12,0.0,2.5,150
+1230,spawn_enemy,200,-50,15,0.3,2.5,150
+1260,spawn_enemy,600,-50,15,-0.3,2.5,150
+1290,spawn_enemy,400,-50,25,0.0,2.0,300
+1320,spawn_enemy,100,-50,15,0.4,2.6,150
+1350,spawn_enemy,700,-50,15,-0.4,2.6,150
+1380,spawn_enemy,300,-50,15,0.1,2.5,150
+1410,spawn_enemy,500,-50,15,-0.1,2.5,150
 
 1500,dialogue,Victoria,composed,"Historia... Mira... Traitorous failures. Your rebellion halts here.",40,3
 1550,dialogue,Historia,shocked,"Victoria! Stand down! We don't want to fight you!",30,0

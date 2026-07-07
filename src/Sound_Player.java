@@ -10,6 +10,25 @@ public class Sound_Player {
     private static final Map<String, Clip> clips = new HashMap<>();
     private static Clip current_music = null;
 
+    private static final Map<String, String> sound_map = new HashMap<>();
+    static {
+        sound_map.put("graze", "graze");
+        sound_map.put("powerup", "powerup");
+        sound_map.put("score", "item00");
+        sound_map.put("shoot", "plst00");
+        sound_map.put("spell", "cat00");
+        sound_map.put("slash", "lazer00");
+        sound_map.put("damage", "damage00");
+        sound_map.put("pldead", "pldead00");
+        sound_map.put("enemy_dead", "enep00");
+        sound_map.put("enemy_shoot", "tan00");
+        sound_map.put("text_click", "select00");
+        sound_map.put("menu_select", "select00");
+        sound_map.put("menu_ok", "ok00");
+        sound_map.put("cancel", "cancel00");
+        sound_map.put("extend", "extend");
+    }
+
     private static void set_volume(Clip clip, int volume_level) {
         try {
             if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
@@ -33,7 +52,8 @@ public class Sound_Player {
 
     public static void play_sound(String name) {
         try {
-            File sound_file = new File("assets/" + name + ".wav");
+            String file_name = sound_map.getOrDefault(name, name);
+            File sound_file = new File("assets/" + file_name + ".wav");
             if (!sound_file.exists()) {
                 return;
             }

@@ -17,6 +17,14 @@ public class Historia_Character extends Player_Character {
     private double target_slash_lx = 0;
     private double target_slash_ly = 0;
 
+    // Slashes Step state machine
+    private int slash_combo_step = 0;
+    private int active_slash_timer = 0;
+
+    // Spell throw parameters
+    private int spears_to_throw = 0;
+    private int spear_throw_timer = 0;
+
     public Historia_Character(double x, double y) {
         super(x, y);
         this.speed_normal = 5.0;
@@ -25,59 +33,133 @@ public class Historia_Character extends Player_Character {
     }
 
     @Override
+    public void update_player(Bullet_Pool pool) {
+        super.update_player(pool);
+
+        // Update sequential spear throw if spell is active
+        if (spears_to_throw > 0) {
+            spear_throw_timer--;
+            if (spear_throw_timer <= 0) {
+                double angle = -Math.PI / 2 + (Math.random() - 0.5) * 0.4;
+                double vx = Math.cos(angle) * 8;
+                double vy = Math.sin(angle) * 8;
+                // Type 4: Player homing bullet. Hitbox radius 35.0, damage 120
+                Bullet_Entity b = pool.acquire_bullet(pos_x, pos_y - 20, vx, vy, 35.0, 4, 120, Color.RED);
+                if (b != null) {
+                    b.is_homing = true;
+                    b.speed = 10;
+                }
+                spears_to_throw--;
+                spear_throw_timer = 14; // spacing between throws (~230ms)
+            }
+        }
+    }
+
+    @Override
     public void fire_weapon(Bullet_Pool pool, boolean focused, List<Enemy_Entity> enemies) {
         if (shoot_cooldown > 0) {
             shoot_cooldown--;
         }
 
-        // Automatic close-range double spear slash (uncontrollable by the player)
+        // Decay visual slash timer
+        if (active_slash_timer > 0) {
+            active_slash_timer--;
+            if (active_slash_timer <= 0) {
+                is_slashing_left = false;
+                is_slashing_right = false;
+            }
+        }
+
+        // Automatic close-range spear slash (uncontrollable by the player)
         if (slash_cooldown > 0) {
             slash_cooldown--;
-            
-            // Trigger second (left) slash slightly after the first
-            if (slash_cooldown == 8) {
-                is_slashing_left = false;
-                Enemy_Entity closest = get_closest_enemy(enemies, 85.0);
-                if (closest != null) {
-                    closest.take_damage((int)(20 + power_level * 4));
-                    target_slash_lx = closest.pos_x;
-                    target_slash_ly = closest.pos_y;
-                    is_slashing_left = true;
-                    slash_angle_left = Math.random() * Math.PI * 2;
-                    Sound_Player.play_sound("slash");
-                }
-            }
         } else {
-            is_slashing_right = false;
-            is_slashing_left = false;
-            
-            // Trigger first (right) slash
+            // Check for close enemies
             Enemy_Entity closest = get_closest_enemy(enemies, 85.0);
             if (closest != null) {
-                closest.take_damage((int)(20 + power_level * 4));
-                target_slash_rx = closest.pos_x;
-                target_slash_ry = closest.pos_y;
-                is_slashing_right = true;
-                slash_cooldown = 18; // total cycle delay
-                slash_angle_right = Math.random() * Math.PI * 2;
+                int bonus = get_graze_damage_bonus();
+                // Determine slash damage based on power level
+                int slash_dmg = 15 + bonus;
+                if (power_level >= 2.0 && power_level < 3.0) {
+                    slash_dmg = 25 + bonus;
+                } else if (power_level >= 3.0 && power_level < 4.0) {
+                    slash_dmg = 35 + bonus;
+                } else if (power_level >= 4.0) {
+                    slash_dmg = 50 + bonus;
+                }
+
+                closest.take_damage(slash_dmg);
+
+                // Combo Step execution: Left -> Right -> Left -> Pause -> Right -> Left -> Right -> Pause
+                boolean is_left_slash = (slash_combo_step == 0 || slash_combo_step == 2 || slash_combo_step == 4);
+                if (is_left_slash) {
+                    is_slashing_left = true;
+                    is_slashing_right = false;
+                    slash_angle_left = Math.random() * Math.PI * 2;
+                    target_slash_lx = closest.pos_x;
+                    target_slash_ly = closest.pos_y;
+                } else {
+                    is_slashing_right = true;
+                    is_slashing_left = false;
+                    slash_angle_right = Math.random() * Math.PI * 2;
+                    target_slash_rx = closest.pos_x;
+                    target_slash_ry = closest.pos_y;
+                }
+
+                // Set cooldown: Step 2 and 5 end with a 24 frame (~400ms) pause, others are 10 frames (~160ms)
+                if (slash_combo_step == 2 || slash_combo_step == 5) {
+                    slash_cooldown = 24;
+                } else {
+                    slash_cooldown = 10;
+                }
+
                 Sound_Player.play_sound("slash");
+                active_slash_timer = 8;
+                slash_combo_step = (slash_combo_step + 1) % 6;
             }
         }
 
         if (shoot_cooldown == 0) {
             int bonus = get_graze_damage_bonus();
             int ipower = (int) power_level;
-            // CAS-8 straight fire lightning bolts
+            
+            // Firing weapon with power level bullet count progression
             if (focused) {
                 // High concentrated bolts
-                pool.acquire_bullet(pos_x - 8, pos_y - 10, 0, -12, 4, 0, 3 + ipower + bonus, Color.CYAN);
-                pool.acquire_bullet(pos_x + 8, pos_y - 10, 0, -12, 4, 0, 3 + ipower + bonus, Color.CYAN);
+                if (power_level < 2.0) {
+                    pool.acquire_bullet(pos_x, pos_y - 12, 0, -12, 4, 0, 2 + bonus, Color.CYAN);
+                } else if (power_level >= 2.0 && power_level < 3.0) {
+                    pool.acquire_bullet(pos_x - 6, pos_y - 10, 0, -12, 4, 0, 3 + bonus, Color.CYAN);
+                    pool.acquire_bullet(pos_x + 6, pos_y - 10, 0, -12, 4, 0, 3 + bonus, Color.CYAN);
+                } else if (power_level >= 3.0 && power_level < 4.0) {
+                    pool.acquire_bullet(pos_x - 10, pos_y - 8, 0, -12, 4, 0, 4 + bonus, Color.CYAN);
+                    pool.acquire_bullet(pos_x, pos_y - 12, 0, -13, 4, 0, 4 + bonus, Color.CYAN);
+                    pool.acquire_bullet(pos_x + 10, pos_y - 8, 0, -12, 4, 0, 4 + bonus, Color.CYAN);
+                } else { // MAX Power
+                    pool.acquire_bullet(pos_x - 12, pos_y - 8, 0, -13, 5, 0, 5 + bonus, Color.CYAN);
+                    pool.acquire_bullet(pos_x - 4, pos_y - 12, 0, -14, 5, 0, 5 + bonus, Color.CYAN);
+                    pool.acquire_bullet(pos_x + 4, pos_y - 12, 0, -14, 5, 0, 5 + bonus, Color.CYAN);
+                    pool.acquire_bullet(pos_x + 12, pos_y - 8, 0, -13, 5, 0, 5 + bonus, Color.CYAN);
+                }
             } else {
-                // Slightly offset straight lines
-                pool.acquire_bullet(pos_x - 12, pos_y - 5, 0, -10, 5, 0, 2 + ipower + bonus, Color.CYAN);
-                pool.acquire_bullet(pos_x, pos_y - 12, 0, -11, 6, 0, 3 + ipower + bonus, Color.CYAN);
-                pool.acquire_bullet(pos_x + 12, pos_y - 5, 0, -10, 5, 0, 2 + ipower + bonus, Color.CYAN);
+                // Wider standard lines
+                if (power_level < 2.0) {
+                    pool.acquire_bullet(pos_x, pos_y - 12, 0, -10, 5, 0, 2 + bonus, Color.CYAN);
+                } else if (power_level >= 2.0 && power_level < 3.0) {
+                    pool.acquire_bullet(pos_x - 8, pos_y - 5, 0, -10, 5, 0, 2 + bonus, Color.CYAN);
+                    pool.acquire_bullet(pos_x + 8, pos_y - 5, 0, -10, 5, 0, 2 + bonus, Color.CYAN);
+                } else if (power_level >= 3.0 && power_level < 4.0) {
+                    pool.acquire_bullet(pos_x - 12, pos_y - 5, -0.5, -10, 5, 0, 3 + bonus, Color.CYAN);
+                    pool.acquire_bullet(pos_x, pos_y - 12, 0, -11, 6, 0, 4 + bonus, Color.CYAN);
+                    pool.acquire_bullet(pos_x + 12, pos_y - 5, 0.5, -10, 5, 0, 3 + bonus, Color.CYAN);
+                } else { // MAX Power
+                    pool.acquire_bullet(pos_x - 16, pos_y - 5, -1.0, -9, 5, 0, 4 + bonus, Color.CYAN);
+                    pool.acquire_bullet(pos_x - 6, pos_y - 10, -0.3, -11, 6, 0, 5 + bonus, Color.CYAN);
+                    pool.acquire_bullet(pos_x + 6, pos_y - 10, 0.3, -11, 6, 0, 5 + bonus, Color.CYAN);
+                    pool.acquire_bullet(pos_x + 16, pos_y - 5, 1.0, -9, 5, 0, 4 + bonus, Color.CYAN);
+                }
             }
+            Sound_Player.play_sound("shoot");
             shoot_cooldown = 6;
         }
     }
@@ -106,18 +188,9 @@ public class Historia_Character extends Player_Character {
         spell_timer = 150; // Invulnerable for 2.5 seconds
         Sound_Player.play_sound("spell");
 
-        // Spawn giant homing spears prioritizing bosses (these spears DO NOT clear bullets)
-        for (int i = 0; i < 15; i++) {
-            double angle = -Math.PI / 2 + (Math.random() - 0.5) * 0.8;
-            double vx = Math.cos(angle) * 8;
-            double vy = Math.sin(angle) * 8;
-            // Type 4: Player homing bullet
-            Bullet_Entity b = pool.acquire_bullet(pos_x, pos_y - 20, vx, vy, 12, 4, 60, Color.RED);
-            if (b != null) {
-                b.is_homing = true;
-                b.speed = 10;
-            }
-        }
+        // Setup sequential spear throw of 7 giant homing spears
+        spears_to_throw = 7;
+        spear_throw_timer = 0; // throw first spear immediately
     }
 
     @Override
@@ -133,14 +206,14 @@ public class Historia_Character extends Player_Character {
         g2d.drawLine((int)pos_x, (int)pos_y, (int)pos_x, (int)(pos_y - 35));
 
         // Draw active right slash effect
-        if (is_slashing_right && slash_cooldown > 8) {
+        if (is_slashing_right) {
             g2d.setColor(new Color(255, 140, 0, 180)); // Orange-red right slash
             g2d.drawArc((int)(pos_x - 60), (int)(pos_y - 60), 120, 120, (int)(Math.toDegrees(slash_angle_right) - 45), 90);
             g2d.drawLine((int)pos_x, (int)pos_y, (int)target_slash_rx, (int)target_slash_ry);
         }
 
         // Draw active left slash effect
-        if (is_slashing_left && slash_cooldown > 0 && slash_cooldown < 14) {
+        if (is_slashing_left) {
             g2d.setColor(new Color(255, 215, 0, 180)); // Gold left slash
             g2d.drawArc((int)(pos_x - 60), (int)(pos_y - 60), 120, 120, (int)(Math.toDegrees(slash_angle_left) + 135), 90);
             g2d.drawLine((int)pos_x, (int)pos_y, (int)target_slash_lx, (int)target_slash_ly);
