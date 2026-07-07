@@ -18,6 +18,7 @@ public abstract class Player_Character {
 
     // Bravery Gauge (from bullet grazing)
     public double bravery_gauge = 0.0;
+    public int graze_emblem_timer = 0;
     
     public Player_Character(double x, double y) {
         this.pos_x = x;
@@ -39,6 +40,9 @@ public abstract class Player_Character {
             if (spell_timer <= 0) {
                 spell_active = false;
             }
+        }
+        if (graze_emblem_timer > 0) {
+            graze_emblem_timer--;
         }
 
         // Decay bravery gauge naturally by 0.2 per tick

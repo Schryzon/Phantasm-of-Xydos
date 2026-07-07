@@ -57,6 +57,7 @@ public class Enemy_Entity {
         health -= amount;
         if (health <= 0) {
             is_active = false;
+            Sound_Player.play_sound("enemy_dead");
         }
     }
 
@@ -68,8 +69,10 @@ public class Enemy_Entity {
 
         // Simple default enemy: drift down, shoot straight down at player location sometimes
         if (shoot_cooldown == 0) {
-            pool.acquire_bullet(pos_x, pos_y, 0, 4, 6, 1, 1, Color.YELLOW);
-            shoot_cooldown = 60 + (int)(Math.random() * 60);
+            double spd = 4.0 * Game_Engine.get_difficulty_speed_mult();
+            pool.acquire_bullet(pos_x, pos_y, 0, spd, 6, 1, 1, Color.YELLOW);
+            Sound_Player.play_sound("enemy_shoot");
+            shoot_cooldown = (int) ((60 + Math.random() * 60) * Game_Engine.get_difficulty_cooldown_mult());
         }
     }
 
@@ -80,6 +83,9 @@ public class Enemy_Entity {
         } else if (health < max_health * 0.7) {
             boss_phase = 2;
         }
+
+        double speed_mult = Game_Engine.get_difficulty_speed_mult();
+        double cooldown_mult = Game_Engine.get_difficulty_cooldown_mult();
 
         // Try to execute custom spell from stage file first
         Stage_Manager.Boss_Spell active_spell = null;
@@ -98,7 +104,7 @@ public class Enemy_Entity {
             if (shoot_cooldown == 0) {
                 String pattern = active_spell.pattern_type;
                 Color col = active_spell.color;
-                double spd = active_spell.bullet_speed;
+                double spd = active_spell.bullet_speed * speed_mult;
 
                 if (pattern.equals("spiral")) {
                     int arms = 4;
@@ -123,7 +129,8 @@ public class Enemy_Entity {
                     double angle = Math.random() * Math.PI * 2;
                     pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * spd, Math.sin(angle) * spd, 8, 1, 1, col);
                 }
-                shoot_cooldown = active_spell.shoot_cooldown;
+                Sound_Player.play_sound("enemy_shoot");
+                shoot_cooldown = (int) (active_spell.shoot_cooldown * cooldown_mult);
             }
             return;
         }
@@ -135,11 +142,13 @@ public class Enemy_Entity {
                 vel_y = (pos_y < 150) ? 1.0 : 0;
                 if (shoot_cooldown == 0) {
                     int num_bullets = 16;
+                    double spd = 3.0 * speed_mult;
                     for (int i = 0; i < num_bullets; i++) {
                         double angle = (2 * Math.PI / num_bullets) * i + (pattern_timer * 0.05);
-                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * 3, Math.sin(angle) * 3, 8, 1, 1, Color.RED);
+                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * spd, Math.sin(angle) * spd, 8, 1, 1, Color.RED);
                     }
-                    shoot_cooldown = 35;
+                    Sound_Player.play_sound("enemy_shoot");
+                    shoot_cooldown = (int) (35 * cooldown_mult);
                 }
             } else {
                 vel_x = Math.sin(pattern_timer * 0.04) * 3;
@@ -147,12 +156,15 @@ public class Enemy_Entity {
                 if (shoot_cooldown == 0) {
                     double angle_center = Math.atan2(player_y - pos_y, player_x - pos_x);
                     int num_bullets = 8;
+                    double spd1 = 4.0 * speed_mult;
+                    double spd2 = 8.0 * speed_mult;
                     for (int i = 0; i < num_bullets; i++) {
                         double angle = angle_center - 0.5 + (i * 1.0 / num_bullets);
-                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * 4, Math.sin(angle) * 4, 6, 1, 1, Color.ORANGE);
+                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * spd1, Math.sin(angle) * spd1, 6, 1, 1, Color.ORANGE);
                     }
-                    pool.acquire_bullet(pos_x, pos_y, Math.cos(angle_center) * 8, Math.sin(angle_center) * 8, 12, 1, 1, Color.WHITE);
-                    shoot_cooldown = 20;
+                    pool.acquire_bullet(pos_x, pos_y, Math.cos(angle_center) * spd2, Math.sin(angle_center) * spd2, 12, 1, 1, Color.WHITE);
+                    Sound_Player.play_sound("enemy_shoot");
+                    shoot_cooldown = (int) (20 * cooldown_mult);
                 }
             }
         } else if (boss_name.equals("Queen Fenria & Xelisa")) {
@@ -161,20 +173,24 @@ public class Enemy_Entity {
             if (boss_phase == 1) {
                 if (shoot_cooldown == 0) {
                     int arms = 4;
+                    double spd = 3.5 * speed_mult;
                     for (int a = 0; a < arms; a++) {
                         double angle = (pattern_timer * 0.08) + (a * Math.PI / 2);
-                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * 3.5, Math.sin(angle) * 3.5, 7, 1, 1, new Color(138, 43, 226));
+                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * spd, Math.sin(angle) * spd, 7, 1, 1, new Color(138, 43, 226));
                     }
-                    shoot_cooldown = 10;
+                    Sound_Player.play_sound("enemy_shoot");
+                    shoot_cooldown = (int) (10 * cooldown_mult);
                 }
             } else {
                 if (shoot_cooldown == 0) {
                     int num_bullets = 24;
+                    double spd = 2.5 * speed_mult;
                     for (int i = 0; i < num_bullets; i++) {
                         double angle = (2 * Math.PI / num_bullets) * i;
-                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * 2.5, Math.sin(angle) * 2.5, 8, 1, 1, Color.MAGENTA);
+                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * spd, Math.sin(angle) * spd, 8, 1, 1, Color.MAGENTA);
                     }
-                    shoot_cooldown = 45;
+                    Sound_Player.play_sound("enemy_shoot");
+                    shoot_cooldown = (int) (45 * cooldown_mult);
                 }
             }
         } else if (boss_name.equals("Goddess Cyria")) {
@@ -182,21 +198,26 @@ public class Enemy_Entity {
             vel_y = (pos_y < 160) ? 1.5 : 0;
             if (boss_phase == 1) {
                 if (shoot_cooldown == 0) {
+                    double spd = 4.5 * speed_mult;
                     for (int d = -2; d <= 2; d++) {
                         double angle = Math.PI / 2 + d * 0.3 + Math.sin(pattern_timer * 0.1) * 0.2;
-                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * 4.5, Math.sin(angle) * 4.5, 6, 1, 1, Color.CYAN);
+                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * spd, Math.sin(angle) * spd, 6, 1, 1, Color.CYAN);
                     }
-                    shoot_cooldown = 8;
+                    Sound_Player.play_sound("enemy_shoot");
+                    shoot_cooldown = (int) (8 * cooldown_mult);
                 }
             } else {
                 if (shoot_cooldown == 0) {
                     int num_bullets = 30;
+                    double spd1 = 2.0 * speed_mult;
+                    double spd2 = 4.0 * speed_mult;
                     for (int i = 0; i < num_bullets; i++) {
                         double angle = (2 * Math.PI / num_bullets) * i;
-                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * 2.0, Math.sin(angle) * 2.0, 7, 1, 1, Color.PINK);
-                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * 4.0, Math.sin(angle) * 4.0, 7, 1, 1, Color.BLUE);
+                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * spd1, Math.sin(angle) * spd1, 7, 1, 1, Color.PINK);
+                        pool.acquire_bullet(pos_x, pos_y, Math.cos(angle) * spd2, Math.sin(angle) * spd2, 7, 1, 1, Color.BLUE);
                     }
-                    shoot_cooldown = 50;
+                    Sound_Player.play_sound("enemy_shoot");
+                    shoot_cooldown = (int) (50 * cooldown_mult);
                 }
             }
         }
@@ -210,18 +231,6 @@ public class Enemy_Entity {
             g2d.fillOval((int)(pos_x - radius), (int)(pos_y - radius), (int)(radius * 2), (int)(radius * 2));
             g2d.setColor(Color.WHITE);
             g2d.drawOval((int)(pos_x - radius), (int)(pos_y - radius), (int)(radius * 2), (int)(radius * 2));
-
-            // Draw Boss Health Bar
-            g2d.setColor(Color.DARK_GRAY);
-            g2d.fillRect(50, 40, 700, 15);
-            g2d.setColor(Color.RED);
-            int bar_width = (int)(700.0 * health / max_health);
-            g2d.fillRect(50, 40, bar_width, 15);
-            g2d.setColor(Color.WHITE);
-            g2d.drawRect(50, 40, 700, 15);
-
-            g2d.setFont(new Font("Arial", Font.BOLD, 14));
-            g2d.drawString(boss_name + " (Phase " + boss_phase + ")", 50, 35);
         } else {
             g2d.setColor(Color.LIGHT_GRAY);
             g2d.fillOval((int)(pos_x - radius), (int)(pos_y - radius), (int)(radius * 2), (int)(radius * 2));

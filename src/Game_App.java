@@ -20,6 +20,8 @@ public class Game_App extends JFrame {
     private Timer game_timer;
     private int selected_character = 1; // 1 = Historia, 2 = Mira
 
+    private Game_Canvas gameplay_canvas;
+
     public Game_App() {
         setTitle("Phantasm of Xydos: Andromeda I");
         setSize(width, height);
@@ -53,11 +55,13 @@ public class Game_App extends JFrame {
         main_container = new JPanel(card_layout);
 
         input_manager = new Input_Manager();
+        gameplay_canvas = new Game_Canvas();
 
         // Register panels
         main_container.add(create_menu_panel(), "menu");
         main_container.add(create_char_select_panel(), "char_select");
-        main_container.add(new Game_Canvas(), "gameplay");
+        main_container.add(create_difficulty_select_panel(), "difficulty_select");
+        main_container.add(gameplay_canvas, "gameplay");
         main_container.add(create_high_scores_panel(), "scores");
         main_container.add(create_settings_panel(), "settings");
 
@@ -113,13 +117,21 @@ public class Game_App extends JFrame {
         JButton scores_button = create_styled_button("HIGH ARCHIVES");
         JButton exit_button = create_styled_button("SYSTEM SHUTDOWN");
 
-        play_button.addActionListener(e -> card_layout.show(main_container, "char_select"));
-        settings_button.addActionListener(e -> card_layout.show(main_container, "settings"));
+        play_button.addActionListener(e -> {
+            Sound_Player.play_sound("menu_ok");
+            card_layout.show(main_container, "char_select");
+        });
+        settings_button.addActionListener(e -> {
+            Sound_Player.play_sound("menu_ok");
+            card_layout.show(main_container, "settings");
+        });
         scores_button.addActionListener(e -> {
+            Sound_Player.play_sound("menu_ok");
             main_container.add(create_high_scores_panel(), "scores");
             card_layout.show(main_container, "scores");
         });
         exit_button.addActionListener(e -> {
+            Sound_Player.play_sound("cancel");
             input_manager.shutdown_controller();
             System.exit(0);
         });
@@ -161,13 +173,17 @@ public class Game_App extends JFrame {
         JPanel hist_card = new JPanel(new BorderLayout());
         hist_card.setBackground(new Color(30, 15, 15));
         hist_card.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
-        JTextArea hist_desc = new JTextArea("\n HISTORIA KOURA\n Vessel of Thunder\n\n - Hitbox: 4.0px\n - Lightning fire (CAS-8 straight lines)\n - Auto melee spear slash (Double Strike)\n - Spell: Lagtanis Karvista\n   (Throws boss-seeking giant spears;\n    does not clear screen bullets;\n    grants invulnerability)");
+        JTextArea hist_desc = new JTextArea("\n HISTORIA KOURA\n Vessel of Thunder\n\n - Hitbox: 4.0px\n - Lightning fire (CAS-8 straight lines)\n - Auto melee spear slash (Left->Right Combo)\n - Spell: Lagtanis Karvista\n   (Throws 7 giant boss-seeking spears;\n    hitbox size radius 35px;\n    grants invulnerability)");
         hist_desc.setFont(new Font("Consolas", Font.PLAIN, 15));
         hist_desc.setForeground(Color.WHITE);
         hist_desc.setEditable(false);
         hist_desc.setOpaque(false);
         JButton select_hist = create_styled_button("ACTIVATE HISTORIA");
-        select_hist.addActionListener(e -> start_new_game(1));
+        select_hist.addActionListener(e -> {
+            Sound_Player.play_sound("menu_ok");
+            selected_character = 1;
+            card_layout.show(main_container, "difficulty_select");
+        });
         hist_card.add(hist_desc, BorderLayout.CENTER);
         hist_card.add(select_hist, BorderLayout.SOUTH);
 
@@ -181,7 +197,11 @@ public class Game_App extends JFrame {
         mira_desc.setEditable(false);
         mira_desc.setOpaque(false);
         JButton select_mira = create_styled_button("ACTIVATE MIRA");
-        select_mira.addActionListener(e -> start_new_game(2));
+        select_mira.addActionListener(e -> {
+            Sound_Player.play_sound("menu_ok");
+            selected_character = 2;
+            card_layout.show(main_container, "difficulty_select");
+        });
         mira_card.add(mira_desc, BorderLayout.CENTER);
         mira_card.add(select_mira, BorderLayout.SOUTH);
 
@@ -190,7 +210,10 @@ public class Game_App extends JFrame {
         panel.add(grid, BorderLayout.CENTER);
 
         JButton back_btn = create_styled_button("RETURN TO COMMAND");
-        back_btn.addActionListener(e -> card_layout.show(main_container, "menu"));
+        back_btn.addActionListener(e -> {
+            Sound_Player.play_sound("cancel");
+            card_layout.show(main_container, "menu");
+        });
         JPanel footer_panel = new JPanel();
         footer_panel.setOpaque(false);
         footer_panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 40, 10));
@@ -198,6 +221,120 @@ public class Game_App extends JFrame {
         panel.add(footer_panel, BorderLayout.SOUTH);
 
         return panel;
+    }
+
+    private JPanel create_difficulty_select_panel() {
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                
+                // Dark mystical starfield background
+                g2d.setColor(new Color(5, 5, 15));
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+                
+                // Draw decorative floating circles/danmaku arcs in the background
+                g2d.setColor(new Color(138, 43, 226, 30));
+                g2d.setStroke(new BasicStroke(3));
+                g2d.drawOval(100, 100, 300, 300);
+                g2d.drawOval(800, 200, 400, 400);
+                
+                g2d.setColor(new Color(0, 206, 209, 20));
+                g2d.drawOval(250, 400, 200, 200);
+            }
+        };
+        panel.setLayout(new BorderLayout());
+
+        JLabel header = new JLabel("CHOOSE DIFFICULTY LEVEL", JLabel.CENTER);
+        header.setFont(new Font("Georgia", Font.BOLD | Font.ITALIC, 36));
+        header.setForeground(new Color(238, 232, 170)); // Golden
+        header.setBorder(BorderFactory.createEmptyBorder(40, 10, 10, 10));
+        panel.add(header, BorderLayout.NORTH);
+
+        JPanel main_grid = new JPanel(new GridBagLayout());
+        main_grid.setOpaque(false);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.insets = new Insets(10, 0, 10, 0);
+
+        // Hover Description area
+        JLabel desc_label = new JLabel("Hover over a difficulty setting to inspect challenges...", JLabel.CENTER);
+        desc_label.setFont(new Font("Consolas", Font.ITALIC, 16));
+        desc_label.setForeground(Color.LIGHT_GRAY);
+        desc_label.setPreferredSize(new Dimension(800, 50));
+
+        // Touhou-style difficulty buttons
+        JButton rookie_btn = create_difficulty_button("1. Rookie", new Color(46, 139, 87), 
+            "ROOKIE MODE: 0.7x Bullet speed, 1.4x slow cooldowns. Best for novices.", desc_label);
+        JButton trooper_btn = create_difficulty_button("2. Trooper", new Color(218, 165, 32), 
+            "TROOPER MODE: 1.0x standard Touhou speed and frequency. The original design.", desc_label);
+        JButton elite_btn = create_difficulty_button("3. Elite", new Color(138, 43, 226), 
+            "ELITE MODE: 1.35x faster bullets, 0.8x cooldowns. True test of reflexes.", desc_label);
+        JButton android_btn = create_difficulty_button("4. Android", new Color(178, 34, 34), 
+            "ANDROID MODE: 1.7x bullet speed, 0.6x frantic firing rates. Extremely dense.", desc_label);
+        JButton cyron_btn = create_difficulty_button("5. CyroN", new Color(0, 206, 209), 
+            "CYRON MODE: 2.1x absolute velocity, 0.45x cooldowns. A flawless wall of danmaku.", desc_label);
+
+        rookie_btn.addActionListener(e -> start_new_game(selected_character, 0));
+        trooper_btn.addActionListener(e -> start_new_game(selected_character, 1));
+        elite_btn.addActionListener(e -> start_new_game(selected_character, 2));
+        android_btn.addActionListener(e -> start_new_game(selected_character, 3));
+        cyron_btn.addActionListener(e -> start_new_game(selected_character, 4));
+
+        main_grid.add(rookie_btn, gbc);
+        main_grid.add(trooper_btn, gbc);
+        main_grid.add(elite_btn, gbc);
+        main_grid.add(android_btn, gbc);
+        main_grid.add(cyron_btn, gbc);
+        
+        gbc.insets = new Insets(25, 0, 10, 0);
+        main_grid.add(desc_label, gbc);
+
+        panel.add(main_grid, BorderLayout.CENTER);
+
+        JButton cancel_btn = create_styled_button("BACK TO PROTOCOL");
+        cancel_btn.addActionListener(e -> {
+            Sound_Player.play_sound("cancel");
+            card_layout.show(main_container, "char_select");
+        });
+        
+        JPanel footer = new JPanel();
+        footer.setOpaque(false);
+        footer.setBorder(BorderFactory.createEmptyBorder(10, 10, 40, 10));
+        footer.add(cancel_btn);
+        panel.add(footer, BorderLayout.SOUTH);
+
+        return panel;
+    }
+
+    private JButton create_difficulty_button(String label, Color highlight_color, String hover_desc, JLabel desc_label) {
+        JButton btn = new JButton(label);
+        btn.setFont(new Font("Georgia", Font.BOLD, 18));
+        btn.setForeground(Color.LIGHT_GRAY);
+        btn.setBackground(new Color(20, 20, 35));
+        btn.setFocusPainted(false);
+        btn.setBorder(BorderFactory.createLineBorder(new Color(80, 80, 100), 2));
+        btn.setPreferredSize(new Dimension(380, 48));
+        
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn.setBackground(highlight_color);
+                btn.setForeground(Color.WHITE);
+                btn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+                desc_label.setText(hover_desc);
+                desc_label.setForeground(highlight_color);
+                Sound_Player.play_sound("menu_select");
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn.setBackground(new Color(20, 20, 35));
+                btn.setForeground(Color.LIGHT_GRAY);
+                btn.setBorder(BorderFactory.createLineBorder(new Color(80, 80, 100), 2));
+            }
+        });
+        
+        return btn;
     }
 
     private JPanel create_settings_panel() {
@@ -309,6 +446,7 @@ public class Game_App extends JFrame {
 
         JButton save_btn = create_styled_button("SAVE AND RETURN");
         save_btn.addActionListener(e -> {
+            Sound_Player.play_sound("menu_ok");
             Config_Manager.save_config("config.ini");
             card_layout.show(main_container, "menu");
         });
@@ -405,7 +543,10 @@ public class Game_App extends JFrame {
         panel.add(scroll, BorderLayout.CENTER);
 
         JButton back_btn = create_styled_button("RETURN TO MAIN PANEL");
-        back_btn.addActionListener(e -> card_layout.show(main_container, "menu"));
+        back_btn.addActionListener(e -> {
+            Sound_Player.play_sound("cancel");
+            card_layout.show(main_container, "menu");
+        });
         JPanel footer_panel = new JPanel();
         footer_panel.setOpaque(false);
         footer_panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 40, 10));
@@ -427,6 +568,7 @@ public class Game_App extends JFrame {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btn.setBackground(new Color(0, 206, 209));
                 btn.setForeground(Color.BLACK);
+                Sound_Player.play_sound("menu_select");
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btn.setBackground(new Color(30, 30, 60));
@@ -436,15 +578,16 @@ public class Game_App extends JFrame {
         return btn;
     }
 
-    private void start_new_game(int char_choice) {
+    private void start_new_game(int char_choice, int difficulty_choice) {
         selected_character = char_choice;
+        Game_Engine.current_difficulty = difficulty_choice;
+        Sound_Player.play_sound("menu_ok");
         input_manager.clear();
         engine = new Game_Engine(selected_character, input_manager);
 
         card_layout.show(main_container, "gameplay");
 
-        Component current_comp = main_container.getComponent(2);
-        current_comp.requestFocusInWindow();
+        gameplay_canvas.requestFocusInWindow();
 
         if (game_timer != null && game_timer.isRunning()) {
             game_timer.stop();
@@ -472,7 +615,7 @@ public class Game_App extends JFrame {
                     handle_game_win();
                 } else {
                     engine.update_game();
-                    current_comp.repaint();
+                    gameplay_canvas.repaint();
                 }
             }
         });
@@ -592,8 +735,17 @@ public class Game_App extends JFrame {
                 g2d.drawString("〈 Challenge Mode 〉", 1000, 50);
 
                 g2d.setFont(new Font("Consolas", Font.BOLD, 22));
-                g2d.setColor(new Color(138, 43, 226));
-                g2d.drawString("NORMAL", 1000, 80);
+                
+                // Color code the difficulty name
+                String diff_str = "TROOPER";
+                Color diff_color = Color.YELLOW;
+                if (Game_Engine.current_difficulty == 0) { diff_str = "ROOKIE"; diff_color = new Color(46, 139, 87); }
+                else if (Game_Engine.current_difficulty == 2) { diff_str = "ELITE"; diff_color = new Color(138, 43, 226); }
+                else if (Game_Engine.current_difficulty == 3) { diff_str = "ANDROID"; diff_color = new Color(178, 34, 34); }
+                else if (Game_Engine.current_difficulty == 4) { diff_str = "CYRON"; diff_color = new Color(0, 206, 209); }
+                
+                g2d.setColor(diff_color);
+                g2d.drawString(diff_str, 1000, 80);
 
                 // Scores
                 g2d.setFont(new Font("Consolas", Font.PLAIN, 18));
@@ -658,7 +810,7 @@ public class Game_App extends JFrame {
                 g2d.setColor(new Color(138, 43, 226, 80));
                 g2d.drawString("XYDOS ANDROMEDA", 1000, 600);
                 g2d.setFont(new Font("Consolas", Font.ITALIC, 11));
-                g2d.drawString("DEVELOPER SYSTEM RESTORE v2.1", 1000, 620);
+                g2d.drawString("DEVELOPER SYSTEM RESTORE v2.2", 1000, 620);
 
                 // ==========================================
                 // 5. Render Dialogue Overlay (within Play Area)

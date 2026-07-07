@@ -15,11 +15,34 @@ public class Game_Engine {
     public final Stage_Manager stage_manager;
     public final Input_Manager input_manager;
     public int score = 0;
+    public static int current_difficulty = 1; // 0=Rookie, 1=Trooper, 2=Elite, 3=Android, 4=CyroN
     public boolean game_over = false;
     public boolean game_win = false;
     public boolean is_paused = false;
     public int pause_selection = 0; // 0 = RESUME, 1 = RETURN TO TITLE
     public boolean return_to_title_requested = false;
+
+    public static double get_difficulty_speed_mult() {
+        switch (current_difficulty) {
+            case 0: return 0.7;  // Rookie
+            case 1: return 1.0;  // Trooper
+            case 2: return 1.35; // Elite
+            case 3: return 1.7;  // Android
+            case 4: return 2.1;  // CyroN
+            default: return 1.0;
+        }
+    }
+
+    public static double get_difficulty_cooldown_mult() {
+        switch (current_difficulty) {
+            case 0: return 1.4;  // Rookie
+            case 1: return 1.0;  // Trooper
+            case 2: return 0.8;  // Elite
+            case 3: return 0.6;  // Android
+            case 4: return 0.45; // CyroN
+            default: return 1.0;
+        }
+    }
 
     // Background Image cache
     private BufferedImage bg_image = null;
@@ -280,11 +303,15 @@ public class Game_Engine {
                         break;
                     } else if (dist < 30.0) {
                         // Graze detection!
-                        player.bravery_gauge += 1.5;
-                        if (player.bravery_gauge > 100.0) {
-                            player.bravery_gauge = 100.0;
+                        if (!b.grazed) {
+                            b.grazed = true;
+                            player.bravery_gauge += 1.5;
+                            if (player.bravery_gauge > 100.0) {
+                                player.bravery_gauge = 100.0;
+                            }
+                            player.graze_emblem_timer = 15;
+                            Sound_Player.play_sound("graze");
                         }
-                        Sound_Player.play_sound("graze");
                     }
                 }
             }

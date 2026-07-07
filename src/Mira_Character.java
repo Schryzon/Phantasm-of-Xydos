@@ -142,6 +142,23 @@ public class Mira_Character extends Player_Character {
             g2d.drawOval((int)(pos_x - 400), (int)(pos_y - 400), 800, 800);
         }
 
+        // Draw flashing Wind graze emblem (swirls)
+        if (graze_emblem_timer > 0) {
+            double scale = 1.0 + (15 - graze_emblem_timer) * 0.12;
+            int alpha = Math.min(255, graze_emblem_timer * 17);
+            g2d.setColor(new Color(0, 255, 200, alpha));
+            java.awt.Stroke old_stroke = g2d.getStroke();
+            g2d.setStroke(new java.awt.BasicStroke(2.0f));
+            
+            // Draw 3 swirl arms using arcs that rotate as they expand
+            int base_r = (int)(22 * scale);
+            g2d.drawArc((int)(pos_x - base_r), (int)(pos_y - base_r), base_r * 2, base_r * 2, (15 - graze_emblem_timer) * 10, 120);
+            g2d.drawArc((int)(pos_x - base_r), (int)(pos_y - base_r), base_r * 2, base_r * 2, (15 - graze_emblem_timer) * 10 + 120, 120);
+            g2d.drawArc((int)(pos_x - base_r), (int)(pos_y - base_r), base_r * 2, base_r * 2, (15 - graze_emblem_timer) * 10 + 240, 120);
+            
+            g2d.setStroke(old_stroke);
+        }
+
         // Draw hit box if focused or debug mode
         if (focused || Config_Manager.show_hitboxes) {
             g2d.setColor(Color.GREEN);

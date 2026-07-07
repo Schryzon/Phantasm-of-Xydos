@@ -219,6 +219,37 @@ public class Historia_Character extends Player_Character {
             g2d.drawLine((int)pos_x, (int)pos_y, (int)target_slash_lx, (int)target_slash_ly);
         }
 
+        // Draw flashing Thunder graze emblem (lightning bolt)
+        if (graze_emblem_timer > 0) {
+            double scale = 1.0 + (15 - graze_emblem_timer) * 0.12;
+            int alpha = Math.min(255, graze_emblem_timer * 17);
+            g2d.setColor(new Color(255, 255, 0, alpha));
+            java.awt.Stroke old_stroke = g2d.getStroke();
+            g2d.setStroke(new java.awt.BasicStroke(2.0f));
+            
+            // Scaled vertices relative to player pos
+            int[] px = {
+                (int)(pos_x - 4 * scale),
+                (int)(pos_x + 8 * scale),
+                (int)(pos_x + 2 * scale),
+                (int)(pos_x + 12 * scale),
+                (int)(pos_x - 4 * scale),
+                (int)(pos_x + 1 * scale),
+                (int)(pos_x - 10 * scale)
+            };
+            int[] py = {
+                (int)(pos_y - 20 * scale),
+                (int)(pos_y - 6 * scale),
+                (int)(pos_y - 3 * scale),
+                (int)(pos_y + 12 * scale),
+                (int)(pos_y + 3 * scale),
+                (int)(pos_y + 0 * scale),
+                (int)(pos_y - 10 * scale)
+            };
+            g2d.drawPolygon(px, py, 7);
+            g2d.setStroke(old_stroke);
+        }
+
         // Draw hit box if focused or debug mode
         if (focused || Config_Manager.show_hitboxes) {
             g2d.setColor(Color.RED);

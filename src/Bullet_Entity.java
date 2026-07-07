@@ -16,6 +16,7 @@ public class Bullet_Entity {
     public double speed;
     public double angle;
     public double rotation_speed;
+    public boolean grazed;
 
     public Bullet_Entity() {
         this.is_active = false;
@@ -35,6 +36,7 @@ public class Bullet_Entity {
         this.speed = 0;
         this.angle = 0;
         this.rotation_speed = 0;
+        this.grazed = false;
     }
 
     public void update() {
