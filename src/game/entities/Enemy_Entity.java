@@ -41,9 +41,9 @@ public class Enemy_Entity {
         pos_y += vel_y;
         pattern_timer++;
 
-        // Bound checking for non-bosses (clamped to widescreen play field)
+        // Bound checking for non-bosses: wide enough to allow off-screen entries from all sides
         if (!is_boss) {
-            if (pos_y > 750 || pos_y < -150 || pos_x < 250 || pos_x > 1030) {
+            if (pos_y > 850 || pos_y < -200 || pos_x < 100 || pos_x > 1180) {
                 is_active = false;
             }
         }

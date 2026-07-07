@@ -242,15 +242,9 @@ public class Stage_Manager {
                 break;
             case "spawn_enemy":
                 double mapped_x = 320.0 + (ev.x * 0.8);
-                // Clamp coordinates helper
-                java.util.function.DoubleUnaryOperator clampX = x -> {
-                    if (x < 335) return 335;
-                    if (x > 945) return 945;
-                    return x;
-                };
 
-                // Spawn primary enemy
-                Enemy_Entity drone = new Enemy_Entity(clampX.applyAsDouble(mapped_x), ev.y, ev.radius, ev.hp, false, "", ev.score);
+                // Spawn primary enemy — no clamping so side entries work naturally
+                Enemy_Entity drone = new Enemy_Entity(mapped_x, ev.y, ev.radius, ev.hp, false, "", ev.score);
                 drone.vel_x = ev.vel_x;
                 drone.vel_y = ev.vel_y;
                 enemies.add(drone);
@@ -258,20 +252,20 @@ public class Stage_Manager {
                 // Spawn squadron additions depending on difficulty
                 int diff = Game_Engine.current_difficulty;
                 if (diff == 2) { // Elite: +1 helper drone slightly offset
-                    Enemy_Entity extra1 = new Enemy_Entity(clampX.applyAsDouble(mapped_x + 35), ev.y - 20, ev.radius, ev.hp, false, "", ev.score);
+                    Enemy_Entity extra1 = new Enemy_Entity(mapped_x + 35, ev.y - 20, ev.radius, ev.hp, false, "", ev.score);
                     extra1.vel_x = ev.vel_x; extra1.vel_y = ev.vel_y;
                     enemies.add(extra1);
                 } else if (diff == 3) { // Android: +2 helper drones in a V-formation
-                    Enemy_Entity extra1 = new Enemy_Entity(clampX.applyAsDouble(mapped_x - 35), ev.y - 20, ev.radius, ev.hp, false, "", ev.score);
-                    Enemy_Entity extra2 = new Enemy_Entity(clampX.applyAsDouble(mapped_x + 35), ev.y - 20, ev.radius, ev.hp, false, "", ev.score);
+                    Enemy_Entity extra1 = new Enemy_Entity(mapped_x - 35, ev.y - 20, ev.radius, ev.hp, false, "", ev.score);
+                    Enemy_Entity extra2 = new Enemy_Entity(mapped_x + 35, ev.y - 20, ev.radius, ev.hp, false, "", ev.score);
                     extra1.vel_x = ev.vel_x; extra1.vel_y = ev.vel_y;
                     extra2.vel_x = ev.vel_x; extra2.vel_y = ev.vel_y;
                     enemies.add(extra1);
                     enemies.add(extra2);
                 } else if (diff == 4) { // CyroN: +3 helper drones in a diamond squadron
-                    Enemy_Entity extra1 = new Enemy_Entity(clampX.applyAsDouble(mapped_x - 40), ev.y - 20, ev.radius, ev.hp, false, "", ev.score);
-                    Enemy_Entity extra2 = new Enemy_Entity(clampX.applyAsDouble(mapped_x + 40), ev.y - 20, ev.radius, ev.hp, false, "", ev.score);
-                    Enemy_Entity extra3 = new Enemy_Entity(clampX.applyAsDouble(mapped_x), ev.y - 45, ev.radius, ev.hp, false, "", ev.score);
+                    Enemy_Entity extra1 = new Enemy_Entity(mapped_x - 40, ev.y - 20, ev.radius, ev.hp, false, "", ev.score);
+                    Enemy_Entity extra2 = new Enemy_Entity(mapped_x + 40, ev.y - 20, ev.radius, ev.hp, false, "", ev.score);
+                    Enemy_Entity extra3 = new Enemy_Entity(mapped_x, ev.y - 45, ev.radius, ev.hp, false, "", ev.score);
                     extra1.vel_x = ev.vel_x; extra1.vel_y = ev.vel_y;
                     extra2.vel_x = ev.vel_x; extra2.vel_y = ev.vel_y;
                     extra3.vel_x = ev.vel_x; extra3.vel_y = ev.vel_y;
